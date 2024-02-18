@@ -1,0 +1,16 @@
+# node packages
+node_modules/
+
+# dist file
+dist/
+
+# env
+.env
+
+# uploads
+uploads/avatar
+uploads/temp
+
+
+# frontend
+frontend
