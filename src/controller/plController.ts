@@ -1,14 +1,9 @@
-/**
- * P & L: Profit and Loss Statement
- */
-
 import { Context } from 'koa'
 import PLService from '@/service/plService'
 
 type SortField = 'time' | 'amount'
 type SortOrder = 'asc' | 'desc'
 
-// 这里设定只能由管理员创建，前端数据受信任，无需重新检测
 class PLController {
   async createIncome(ctx: Context) {
     const { reason, time, amount } = ctx.request.body
@@ -32,7 +27,6 @@ class PLController {
     }
   }
 
-  // 获取 income 数据
   async getIncomes(ctx: Context) {
     const page = parseInt(ctx.query.page as string)
     const limit = parseInt(ctx.query.limit as string)
@@ -52,7 +46,6 @@ class PLController {
     }
   }
 
-  // 获取 expenditure 数据
   async getExpenditures(ctx: Context) {
     const page = parseInt(ctx.query.page as string)
     const limit = parseInt(ctx.query.limit as string)
@@ -72,7 +65,6 @@ class PLController {
     }
   }
 
-  // 获取收支总数
   async getPLStatement(ctx: Context) {
     const responseData = await PLService.getPLStatement()
 

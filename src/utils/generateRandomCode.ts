@@ -1,4 +1,3 @@
-// 生成随机验证码
 export function generateRandomCode(length: number) {
   const charset = '023456789abcdefghjkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ'
   let code = ''

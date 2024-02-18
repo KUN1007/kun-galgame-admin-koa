@@ -1,7 +1,3 @@
-/**
- * 自定义错误
- */
-
 class KUNError extends Error {
   code: number
   error: unknown

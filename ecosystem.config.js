@@ -1,19 +1,17 @@
-/* This file use for pm2 */
-
 const path = require('path')
 
 module.exports = {
   apps: [
     {
-      name: 'kun-galgame-koa', // Application name
-      script: './dist/kun.js', // Startup script (compiled JavaScript file)
-      cwd: path.join(__dirname), // Application directory
-      instances: 1, // Number of instances to start
-      autorestart: true, // Automatically restart
-      watch: false, // Watch for file changes and auto-restart
-      max_memory_restart: '1G', // Restart when memory usage exceeds 1GB
+      name: 'kun-galgame-koa',
+      script: './dist/kun.js',
+      cwd: path.join(__dirname),
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G',
       env: {
-        NODE_ENV: 'production', // Set environment variable
+        NODE_ENV: 'production',
       },
     },
   ],

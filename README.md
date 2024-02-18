@@ -2,6 +2,6 @@
 
 
 
-## 介绍
+## Introduction
 
 KUN Visual Novel admin panel backend
