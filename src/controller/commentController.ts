@@ -2,18 +2,22 @@ import { Context } from 'koa'
 import CommentService from '@/service/commentService'
 
 class CommentController {
-  async getCommentsByReplyRid(ctx: Context) {
-    try {
-      const rid = parseInt(ctx.query.rid as string)
-      const comments = await CommentService.getCommentsByReplyRid(rid)
-      ctx.body = {
-        code: 200,
-        message: 'OK',
-        data: comments,
-      }
-    } catch (error) {
-      ctx.status = 500
-      ctx.body = { error: 'Failed to fetch comments' }
+  async getCommentCidByContent(ctx: Context) {
+    const content = ctx.query.content as string
+    const comments = await CommentService.getCommentCidByContent(content)
+    ctx.body = {
+      code: 200,
+      message: 'OK',
+      data: comments,
+    }
+  }
+
+  async updateCommentsByReplyRid(ctx: Context) {
+    const { rid, content } = ctx.request.body
+    await CommentService.updateCommentsByReplyRid(rid, content)
+    ctx.body = {
+      code: 200,
+      message: 'OK',
     }
   }
 }

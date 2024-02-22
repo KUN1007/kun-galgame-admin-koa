@@ -1,10 +1,12 @@
 import CommentModel from '@/models/comment'
 
 class CommentService {
-  async getCommentsByReplyRid(rid: number) {
-    const comment = await CommentModel.find({ rid })
+  async getCommentCidByContent(content: string) {
+    const regex = new RegExp(content, 'i')
+
+    const comment = await CommentModel.find({ content: regex })
       .populate('cuid', 'uid avatar name')
-      .populate('touid', 'uid name')
+      .populate('touid', 'uid avatar name')
       .lean()
 
     const replyComments = comment.map((comment) => ({
@@ -18,6 +20,7 @@ class CommentService {
       },
       to_user: {
         uid: comment.touid[0].uid,
+        avatar: comment.touid[0].avatar,
         name: comment.touid[0].name,
       },
       content: comment.content,
@@ -26,6 +29,10 @@ class CommentService {
     }))
 
     return replyComments
+  }
+
+  async updateCommentsByReplyRid(rid: number, content: string) {
+    await CommentModel.updateOne({ rid }, { content })
   }
 }
 
