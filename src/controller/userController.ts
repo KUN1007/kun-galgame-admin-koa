@@ -1,7 +1,7 @@
 import { Context } from 'koa'
 import UserService from '@/service/userService'
 import { setCookieRefreshToken, getCookieTokenInfo } from '@/utils/cookies'
-import { setValue, getValue } from '@/config/redisConfig'
+import { setValue, getValue, delValue } from '@/config/redisConfig'
 
 import { isValidEmail, isValidName, isValidPassword } from '@/utils/validate'
 
@@ -44,6 +44,30 @@ class UserController {
     }
   }
 
+  async banUserByUid(ctx: Context) {
+    const uid = ctx.request.body.uid as string
+
+    await delValue(`refreshToken:${uid}`)
+    await UserService.updateUserByUid(uid, 'status', '1')
+
+    ctx.body = {
+      code: 200,
+      message: 'OK',
+      data: {},
+    }
+  }
+
+  async unbanUserByUid(ctx: Context) {
+    const uid = ctx.request.body.uid as string
+    await UserService.updateUserByUid(uid, 'status', '0')
+
+    ctx.body = {
+      code: 200,
+      message: 'OK',
+      data: {},
+    }
+  }
+
   async getUserByUid(ctx: Context) {
     const uid = parseInt(ctx.params.uid as string)
     const user = await UserService.getUserByUid(uid)
@@ -55,17 +79,16 @@ class UserController {
     }
   }
 
-  async updateUserBio(ctx: Context) {
+  async updateUserByUid(ctx: Context) {
     const uid = getCookieTokenInfo(ctx).uid
 
-    const bio = ctx.request.body.bio as string
+    const { fieldToUpdate, newFieldValue } = ctx.request.body
 
-    if (bio.length > 107) {
-      ctx.app.emit('kunError', 10106, ctx)
-      return
-    }
-
-    await UserService.updateUserBio(uid, bio)
+    await UserService.updateUserByUid(
+      uid.toString(),
+      fieldToUpdate,
+      newFieldValue
+    )
 
     ctx.body = {
       code: 200,

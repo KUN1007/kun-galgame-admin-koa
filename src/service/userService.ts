@@ -76,8 +76,15 @@ class UserService {
     }
   }
 
-  async updateUserBio(uid: number, bio: string) {
-    await UserModel.updateOne({ uid }, { $set: { bio: bio } })
+  async updateUserByUid(
+    uid: string,
+    fieldToUpdate: string,
+    newFieldValue: string
+  ) {
+    await UserModel.updateOne(
+      { uid },
+      { $set: { [fieldToUpdate]: newFieldValue } }
+    )
   }
 
   async getUserTopics(tidArray: number[]) {

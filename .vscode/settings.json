@@ -17,6 +17,7 @@
     "setex",
     "touid",
     "Uid",
+    "unban",
     "upid",
     "upvotes",
     "utid",
