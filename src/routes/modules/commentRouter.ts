@@ -7,6 +7,8 @@ router.prefix('/api/comment')
 
 router.get('/', CommentController.getCommentCidByContent)
 
-router.put('/', CommentController.updateCommentsByReplyRid)
+router.put('/', CommentController.updateCommentsByCid)
+
+router.del('/', CommentController.deleteCommentsByCid)
 
 export default router

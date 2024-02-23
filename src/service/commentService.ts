@@ -1,4 +1,7 @@
 import CommentModel from '@/models/comment'
+import ReplyModel from '@/models/reply'
+import TopicModel from '@/models/topic'
+import UserModel from '@/models/user'
 
 class CommentService {
   async getCommentCidByContent(content: string) {
@@ -31,8 +34,46 @@ class CommentService {
     return replyComments
   }
 
-  async updateCommentsByReplyRid(rid: number, content: string) {
-    await CommentModel.updateOne({ rid }, { content })
+  async updateCommentsByCid(cid: number, content: string) {
+    await CommentModel.updateOne({ cid }, { content })
+  }
+
+  async deleteCommentsByCid(cid: number) {
+    const commentInfo = await CommentModel.findOne({ cid }).lean()
+
+    await UserModel.updateOne(
+      {
+        uid: commentInfo.c_uid,
+      },
+      {
+        $pull: { comment: commentInfo.cid },
+        $inc: {
+          comment_count: -1,
+          moemoepoint: -commentInfo.likes.length,
+          like: -commentInfo.likes.length,
+          dislike: -commentInfo.dislikes.length,
+        },
+      }
+    )
+
+    await UserModel.updateOne(
+      {
+        uid: commentInfo.to_uid,
+      },
+      { $inc: { moemoepoint: -1, like: -1 } }
+    )
+
+    await TopicModel.updateOne(
+      { tid: commentInfo.tid },
+      { $inc: { popularity: -2, comments: -1 } }
+    )
+
+    await ReplyModel.updateOne(
+      { rid: commentInfo.rid },
+      { $pull: { comment: commentInfo.cid }, $inc: { comment_count: -1 } }
+    )
+
+    await CommentModel.deleteOne({ cid })
   }
 }
 

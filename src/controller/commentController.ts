@@ -12,9 +12,18 @@ class CommentController {
     }
   }
 
-  async updateCommentsByReplyRid(ctx: Context) {
-    const { rid, content } = ctx.request.body
-    await CommentService.updateCommentsByReplyRid(rid, content)
+  async updateCommentsByCid(ctx: Context) {
+    const { cid, content } = ctx.request.body
+    await CommentService.updateCommentsByCid(cid, content)
+    ctx.body = {
+      code: 200,
+      message: 'OK',
+    }
+  }
+
+  async deleteCommentsByCid(ctx: Context) {
+    const cid = ctx.query.cid as string
+    await CommentService.deleteCommentsByCid(parseInt(cid))
     ctx.body = {
       code: 200,
       message: 'OK',
