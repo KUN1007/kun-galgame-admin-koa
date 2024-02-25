@@ -65,6 +65,10 @@ class TagService {
     }
   }
 
+  async deleteTagsByTidAndRid(tid: number, rid: number) {
+    await TagModel.deleteMany({ tid, rid })
+  }
+
   async getTopTags(limit: number) {
     const topTags = await TagModel.aggregate([
       { $group: { _id: '$name', count: { $sum: 1 } } },

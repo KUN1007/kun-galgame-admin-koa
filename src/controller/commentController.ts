@@ -2,9 +2,9 @@ import { Context } from 'koa'
 import CommentService from '@/service/commentService'
 
 class CommentController {
-  async getCommentCidByContent(ctx: Context) {
+  async getComments(ctx: Context) {
     const content = ctx.query.content as string
-    const comments = await CommentService.getCommentCidByContent(content)
+    const comments = await CommentService.getComments(content)
     ctx.body = {
       code: 200,
       message: 'OK',

@@ -4,7 +4,7 @@ import TopicModel from '@/models/topic'
 import UserModel from '@/models/user'
 
 class CommentService {
-  async getCommentCidByContent(content: string) {
+  async getComments(content: string) {
     const regex = new RegExp(content, 'i')
 
     const comment = await CommentModel.find({ content: regex })

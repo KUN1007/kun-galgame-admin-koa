@@ -5,7 +5,7 @@ const router = new Router()
 
 router.prefix('/api/comment')
 
-router.get('/', CommentController.getCommentCidByContent)
+router.get('/', CommentController.getComments)
 
 router.put('/', CommentController.updateCommentsByCid)
 
