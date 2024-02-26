@@ -1,54 +1,21 @@
 import { Context } from 'koa'
 import TopicService from '@/service/topicService'
-import { getCookieTokenInfo } from '@/utils/cookies'
 
 import { checkTopicPublish } from './utils/checkTopicPublish'
-import type {
-  SortField,
-  SortOrder,
-  SortFieldRanking,
-} from './types/topicController'
+import type { SortOrder, SortFieldRanking } from './types/topicController'
 
 class TopicController {
-  async getTopicByTid(ctx: Context) {
-    const tid = parseInt(ctx.params.tid as string)
-    const topic = await TopicService.getTopicByTid(tid)
-
-    if (!topic) {
-      ctx.body = { code: '404', message: 'Topic not found', data: {} }
-      return
-    }
-
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: topic,
-    }
-  }
-
   async updateTopic(ctx: Context) {
-    const uid = getCookieTokenInfo(ctx).uid
+    const { tid, title, content, tags, category } = ctx.request.body
 
-    const tid = parseInt(ctx.params.tid as string)
-
-    const { title, content, tags, category, edited } = ctx.request.body
-
-    const res = checkTopicPublish(title, content, tags, category, edited)
+    const res = checkTopicPublish(title, content, tags, category)
 
     if (res) {
       ctx.app.emit('kunError', res, ctx)
       return
     }
 
-    await TopicService.updateTopic(
-      uid,
-      tid,
-      title,
-      content,
-      tags,
-      category,
-      edited
-    )
+    await TopicService.updateTopic(tid, title, content, tags, category)
 
     ctx.body = {
       code: 200,
@@ -57,15 +24,10 @@ class TopicController {
     }
   }
 
-  async searchTopics(ctx: Context) {
-    const { keywords, category, page, limit, sortField, sortOrder } = ctx.query
-    const data = await TopicService.searchTopics(
-      (keywords as string).trim().slice(0, 40),
-      JSON.parse(category as string),
-      parseInt(page as string),
-      parseInt(limit as string),
-      sortField as SortField,
-      sortOrder as SortOrder
+  async getTopicsByContentApi(ctx: Context) {
+    const keywords = ctx.query.keywords
+    const data = await TopicService.getTopicsByContentApi(
+      (keywords as string).trim().slice(0, 40)
     )
     ctx.body = { code: 200, message: 'OK', data: data }
   }

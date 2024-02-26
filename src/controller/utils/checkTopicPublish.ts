@@ -1,11 +1,8 @@
-import { isValidTimestamp } from '@/utils/validate'
-
 export const checkTopicPublish = (
   title: string,
   content: string,
   tags: string[],
-  category: string[],
-  edited: number
+  category: string[]
 ) => {
   if (!title.trim() || title.trim().length > 40) {
     return 10204
@@ -21,10 +18,6 @@ export const checkTopicPublish = (
 
   if (!category.length || category.length > 2) {
     return 10207
-  }
-
-  if (!isValidTimestamp(edited)) {
-    return 10208
   }
 
   return 0

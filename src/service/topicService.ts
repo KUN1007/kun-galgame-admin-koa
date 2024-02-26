@@ -7,29 +7,20 @@ import TagService from './tagService'
 import UserService from './userService'
 import mongoose from '@/db/connection'
 
-import type {
-  SortField,
-  SortOrder,
-  SortFieldRanking,
-} from './types/topicService'
+import type { SortOrder, SortFieldRanking } from './types/topicService'
 
 class TopicService {
   async updateTopic(
-    uid: number,
     tid: number,
     title: string,
     content: string,
     tags: string[],
-    category: string[],
-    edited: number
+    category: string[]
   ) {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
-      await TopicModel.updateOne(
-        { tid, uid },
-        { title, content, tags, category, edited }
-      )
+      await TopicModel.updateOne({ tid }, { title, content, tags, category })
 
       await TagService.updateTagsByTidAndRid(tid, 0, tags, category)
 
@@ -96,16 +87,7 @@ class TopicService {
     }
   }
 
-  async searchTopics(
-    keywords: string,
-    category: string[],
-    page: number,
-    limit: number,
-    sortField: SortField,
-    sortOrder: SortOrder
-  ) {
-    const skip = (page - 1) * limit
-
+  async getTopicsByContentApi(keywords: string) {
     const keywordsArray: string[] = keywords
       .split(' ')
       .filter((keyword) => keyword.trim() !== '')
@@ -115,34 +97,36 @@ class TopicService {
     )
 
     const searchQuery = {
-      $and: [
-        { category: { $in: category } },
-        {
-          $or: [
-            { title: { $regex: escapedKeywords.join('|'), $options: 'i' } },
-            { content: { $regex: escapedKeywords.join('|'), $options: 'i' } },
-            { category: { $in: escapedKeywords } },
-            { tags: { $in: escapedKeywords } },
-          ],
-        },
+      $or: [
+        { title: { $regex: escapedKeywords.join('|'), $options: 'i' } },
+        { content: { $regex: escapedKeywords.join('|'), $options: 'i' } },
+        { category: { $in: escapedKeywords } },
+        { tags: { $in: escapedKeywords } },
       ],
     }
 
-    const sortOptions: Record<string, 'asc' | 'desc'> = {
-      [sortField]: sortOrder === 'asc' ? 'asc' : 'desc',
-    }
-
     const topics = await TopicModel.find(searchQuery)
-      .sort(sortOptions)
-      .skip(skip)
-      .limit(limit)
+      .populate('user', 'uid avatar name')
       .lean()
 
     const data = topics.map((topic) => ({
       tid: topic.tid,
+      user: {
+        uid: topic.user[0].uid,
+        avatar: topic.user[0].avatar,
+        name: topic.user[0].name,
+      },
       title: topic.title,
       category: topic.category,
-      content: topic.content.slice(0, 107),
+      tags: topic.tags,
+      content: topic.content,
+      time: topic.time,
+      views: topic.views,
+      comments: topic.comments,
+      replies: topic.replies_count,
+
+      edited: topic.edited,
+      status: topic.status,
     }))
 
     return data

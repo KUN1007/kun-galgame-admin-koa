@@ -1,17 +1,12 @@
 import Router from 'koa-router'
 import TopicController from '@/controller/topicController'
-import ReplyController from '@/controller/replyController'
 
 const router = new Router()
 
-router.prefix('/api/topics')
+router.prefix('/api/topic')
 
-router.get('/:tid', TopicController.getTopicByTid)
+router.get('/', TopicController.getTopicsByContentApi)
 
-router.put('/:tid', TopicController.updateTopic)
-
-router.get('/:tid/replies', ReplyController.getReplies)
-
-router.put('/:tid/reply', ReplyController.updateReply)
+router.put('/', TopicController.updateTopic)
 
 export default router
