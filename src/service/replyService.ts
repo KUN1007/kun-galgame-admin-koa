@@ -63,13 +63,14 @@ class ReplyService {
   async deleteReplyByRid(rid: number) {
     const replyInfo = await ReplyModel.findOne({ rid })
 
+    const decreaseAmount = replyInfo.likes.length + replyInfo.upvotes.length
     await UserModel.updateOne(
       { uid: replyInfo.r_uid },
       {
         $pull: { reply: replyInfo.rid },
         $inc: {
           reply_count: -1,
-          moemoepoint: -replyInfo.likes.length * 2,
+          moemoepoint: -decreaseAmount,
           upvote: -replyInfo.upvotes.length,
           like: -replyInfo.likes.length,
           dislike: -replyInfo.dislikes.length,

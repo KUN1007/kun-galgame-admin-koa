@@ -7,6 +7,8 @@ router.prefix('/api/topic')
 
 router.get('/', TopicController.getTopicsByContentApi)
 
-router.put('/', TopicController.updateTopic)
+router.put('/', TopicController.updateTopicByTid)
+
+router.del('/', TopicController.deleteTopicByTid)
 
 export default router

@@ -8,9 +8,11 @@ import UserService from './userService'
 import mongoose from '@/db/connection'
 
 import type { SortOrder, SortFieldRanking } from './types/topicService'
+import UserModel from '@/models/user'
+import ReplyService from './replyService'
 
 class TopicService {
-  async updateTopic(
+  async updateTopicByTid(
     tid: number,
     title: string,
     content: string,
@@ -130,6 +132,49 @@ class TopicService {
     }))
 
     return data
+  }
+
+  async deleteTopicByTid(tid: number) {
+    const topic = await TopicModel.findOne({ tid }).lean()
+
+    const decreaseAmount = topic.likes.length + topic.upvotes.length * 7
+    await UserModel.updateOne(
+      { uid: topic.uid },
+      {
+        $pull: { topic: topic.tid },
+        $inc: {
+          daily_topic_count: -1,
+          topic_count: -1,
+          moemoepoint: -decreaseAmount,
+          upvote: -topic.upvotes.length,
+          like: -topic.likes.length,
+          dislike: -topic.dislikes.length,
+        },
+      }
+    )
+
+    await TagService.deleteTagsByTidAndRid(topic.tid, 0)
+
+    for (const uid of topic.upvotes) {
+      await UserModel.updateOne(
+        { uid },
+        { $inc: { upvote_topic_count: 1 }, $pull: { upvote_topic: tid } }
+      )
+    }
+
+    for (const uid of topic.likes) {
+      await UserModel.updateOne({ uid }, { $pull: { like_topic: tid } })
+    }
+
+    for (const uid of topic.dislikes) {
+      await UserModel.updateOne({ uid }, { $pull: { dislike_topic: tid } })
+    }
+
+    for (const rid of topic.replies) {
+      await ReplyService.deleteReplyByRid(rid)
+    }
+
+    await TopicModel.deleteOne({ tid })
   }
 
   async getTopicRanking(

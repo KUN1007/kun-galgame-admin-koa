@@ -5,7 +5,7 @@ import { checkTopicPublish } from './utils/checkTopicPublish'
 import type { SortOrder, SortFieldRanking } from './types/topicController'
 
 class TopicController {
-  async updateTopic(ctx: Context) {
+  async updateTopicByTid(ctx: Context) {
     const { tid, title, content, tags, category } = ctx.request.body
 
     const res = checkTopicPublish(title, content, tags, category)
@@ -15,7 +15,7 @@ class TopicController {
       return
     }
 
-    await TopicService.updateTopic(tid, title, content, tags, category)
+    await TopicService.updateTopicByTid(tid, title, content, tags, category)
 
     ctx.body = {
       code: 200,
@@ -30,6 +30,15 @@ class TopicController {
       (keywords as string).trim().slice(0, 40)
     )
     ctx.body = { code: 200, message: 'OK', data: data }
+  }
+
+  async deleteTopicByTid(ctx: Context) {
+    const tid = ctx.query.tid as string
+    await TopicService.deleteTopicByTid(parseInt(tid))
+    ctx.body = {
+      code: 200,
+      message: 'OK',
+    }
   }
 
   async getTopicRanking(ctx: Context) {
