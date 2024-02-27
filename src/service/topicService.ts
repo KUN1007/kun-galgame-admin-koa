@@ -177,6 +177,10 @@ class TopicService {
     await TopicModel.deleteOne({ tid })
   }
 
+  async updateTopicStatus(tid: number, status: number) {
+    await TopicModel.updateOne({ tid }, { status })
+  }
+
   async getTopicRanking(
     page: number,
     limit: number,

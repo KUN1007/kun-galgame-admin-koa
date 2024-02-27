@@ -11,4 +11,6 @@ router.put('/', TopicController.updateTopicByTid)
 
 router.del('/', TopicController.deleteTopicByTid)
 
+router.put('/status', TopicController.updateTopicStatus)
+
 export default router

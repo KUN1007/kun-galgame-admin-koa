@@ -41,6 +41,15 @@ class TopicController {
     }
   }
 
+  async updateTopicStatus(ctx: Context) {
+    const { tid, status } = ctx.request.body
+    await TopicService.updateTopicStatus(parseInt(tid), parseInt(status))
+    ctx.body = {
+      code: 200,
+      message: 'OK',
+    }
+  }
+
   async getTopicRanking(ctx: Context) {
     const { page, limit, sortField, sortOrder } = ctx.query
 
