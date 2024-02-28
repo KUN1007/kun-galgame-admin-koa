@@ -44,6 +44,18 @@ class UserController {
     }
   }
 
+  async getUserByUsername(ctx: Context) {
+    const name = ctx.query.name as string
+
+    const user = await UserService.getUserByUsername(name)
+
+    ctx.body = {
+      code: 200,
+      message: 'OK',
+      data: user,
+    }
+  }
+
   async banUserByUid(ctx: Context) {
     const uid = ctx.request.body.uid as string
 
