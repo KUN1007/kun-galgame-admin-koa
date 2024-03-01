@@ -11,6 +11,8 @@ router.put('/ban', UserController.banUserByUid)
 
 router.put('/unban', UserController.unbanUserByUid)
 
+router.get('/search', UserController.getUserByUsername)
+
 router.get('/:uid', UserController.getUserByUid)
 
 router.put('/:uid/bio', UserController.banUserByUid)
