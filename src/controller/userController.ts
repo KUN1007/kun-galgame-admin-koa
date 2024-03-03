@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 import UserService from '@/service/userService'
-import { setCookieRefreshToken, getCookieTokenInfo } from '@/utils/cookies'
+import { setCookieAdminToken, getCookieTokenInfo } from '@/utils/cookies'
 import { setValue, getValue, delValue } from '@/config/redisConfig'
 
 import { isValidEmail, isValidName, isValidPassword } from '@/utils/validate'
@@ -15,14 +15,14 @@ class UserController {
       !(isValidName(name) || isValidEmail(name)) ||
       !isValidPassword(password)
     ) {
-      ctx.app.emit('kunError', 10107, ctx)
+      ctx.app.emit('kunError', 10104, ctx)
       return
     }
 
     const loginCD = await getValue(`loginCD:${name}`)
 
     if (loginCD) {
-      ctx.app.emit('kunError', 10112, ctx)
+      ctx.app.emit('kunError', 10105, ctx)
       return
     } else {
       setValue(`loginCD:${name}`, name, 60)
@@ -35,12 +35,12 @@ class UserController {
       return
     }
 
-    setCookieRefreshToken(ctx, result.refreshToken)
+    setCookieAdminToken(ctx, result.token)
 
     ctx.body = {
       code: 200,
       message: 'OK',
-      data: result.data,
+      data: result,
     }
   }
 

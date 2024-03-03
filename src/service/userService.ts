@@ -1,14 +1,14 @@
 import bcrypt from 'bcrypt'
 import UserModel from '@/models/user'
 import TopicModel from '@/models/topic'
-import AuthService from './authService'
 import TopicService from './topicService'
 import ReplyService from './replyService'
 import CommentService from './commentService'
-import type { LoginResponseData } from './types/userService'
 import ReplyModel from '@/models/reply'
 import CommentModel from '@/models/comment'
 
+import { generateLoginToken } from '@/utils/jwt'
+import type { LoginResponseData } from './types/userService'
 import type { SortOrder, SortFieldRanking } from './types/userService'
 
 class UserService {
@@ -48,27 +48,23 @@ class UserService {
       return 10101
     }
 
+    if (user.roles <= 1) {
+      return 10106
+    }
+
     const isCorrectPassword = await bcrypt.compare(password, user.password)
 
     if (isCorrectPassword) {
-      const { token, refreshToken } = await AuthService.generateTokens(
-        user.uid,
-        user.name
-      )
+      const token = await generateLoginToken(user.uid, user.name)
 
       const userInfo = {
         uid: user.uid,
         name: user.name,
         avatar: user.avatar,
-        moemoepoint: user.moemoepoint,
-        roles: user.roles,
         token,
       }
 
-      return {
-        data: userInfo,
-        refreshToken,
-      }
+      return userInfo
     } else {
       return 10102
     }

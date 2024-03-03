@@ -8,14 +8,9 @@ export type SortFieldRanking =
   | 'reply_count'
   | 'comment_count'
 
-interface LoginUserResponseData {
+export interface LoginResponseData {
   uid: number
   name: string
   avatar: string
   token: string
-}
-
-export interface LoginResponseData {
-  data: LoginUserResponseData
-  refreshToken: string
 }

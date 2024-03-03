@@ -24,7 +24,7 @@ export const checkReplyPublish = (
   }
 
   if (!isValidTimestamp(time)) {
-    return 10208
+    return 10205
   }
 
   return 0

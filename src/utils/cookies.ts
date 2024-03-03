@@ -1,15 +1,15 @@
 import { Context } from 'koa'
 import { verifyJWTPayload } from './jwt'
 
-export function setCookieRefreshToken(ctx: Context, token: string) {
-  ctx.cookies.set('kungalgame-moemoe-refresh-token', token, {
+export function setCookieAdminToken(ctx: Context, token: string) {
+  ctx.cookies.set('kungalgame-admin-token', token, {
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   })
 }
 
 export function getCookieTokenInfo(ctx: Context) {
-  const refreshToken = ctx.cookies.get('kungalgame-moemoe-refresh-token')
+  const refreshToken = ctx.cookies.get('kungalgame-admin-token')
 
   try {
     const user = verifyJWTPayload(refreshToken)
