@@ -2,6 +2,9 @@ import bcrypt from 'bcrypt'
 import UserModel from '@/models/user'
 import TopicModel from '@/models/topic'
 import AuthService from './authService'
+import TopicService from './topicService'
+import ReplyService from './replyService'
+import CommentService from './commentService'
 import type { LoginResponseData } from './types/userService'
 import ReplyModel from '@/models/reply'
 import CommentModel from '@/models/comment'
@@ -80,6 +83,23 @@ class UserService {
       { uid },
       { $set: { [fieldToUpdate]: newFieldValue } }
     )
+  }
+
+  async deleteUserByUid(uid: number) {
+    const user = await UserModel.findOne({ uid }).lean()
+    for (const tid of user.topic) {
+      await TopicService.deleteTopicByTid(tid)
+    }
+
+    for (const rid of user.reply) {
+      await ReplyService.deleteReplyByRid(rid)
+    }
+
+    for (const cid of user.comment) {
+      await CommentService.deleteCommentsByCid(cid)
+    }
+
+    await UserModel.deleteOne({ uid })
   }
 
   async getUserTopics(tidArray: number[]) {

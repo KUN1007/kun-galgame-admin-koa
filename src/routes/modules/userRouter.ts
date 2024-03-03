@@ -15,6 +15,8 @@ router.get('/search', UserController.getUserByUsername)
 
 router.get('/:uid', UserController.getUserByUid)
 
+router.del('/:uid', UserController.deleteUserByUid)
+
 router.put('/:uid/bio', UserController.banUserByUid)
 
 router.get('/:uid/topics', UserController.getUserTopics)

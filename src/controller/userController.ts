@@ -80,6 +80,18 @@ class UserController {
     }
   }
 
+  async deleteUserByUid(ctx: Context) {
+    const uid = ctx.params.uid as string
+    await delValue(`refreshToken:${uid}`)
+    await UserService.deleteUserByUid(parseInt(uid))
+
+    ctx.body = {
+      code: 200,
+      message: 'OK',
+      data: {},
+    }
+  }
+
   async getUserByUid(ctx: Context) {
     const uid = parseInt(ctx.params.uid as string)
     const user = await UserService.getUserByUid(uid)
