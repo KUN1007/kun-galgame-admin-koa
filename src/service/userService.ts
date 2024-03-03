@@ -10,34 +10,22 @@ import type { SortOrder, SortFieldRanking } from './types/userService'
 
 class UserService {
   async getUserByUid(uid: number) {
-    const user = await UserModel.findOne({ uid })
-    const responseData = {
-      uid: user.uid,
-      name: user.name,
-      avatar: user.avatar,
-      roles: user.roles,
-      status: user.status,
-      time: user.time,
-      moemoepoint: user.moemoepoint,
-      bio: user.bio,
-      upvote: user.upvote,
-      like: user.like,
-      dislike: user.dislike,
-      daily_topic_count: user.daily_topic_count,
-
-      topic: user.topic,
-      reply: user.reply,
-      comment: user.comment,
-      likeTopic: user.like_topic,
-      upvoteTopic: user.upvote_topic,
-    }
-    return responseData
+    const user = await UserModel.findOne({ uid }).lean()
+    const { password, _id, ...rest } = user
+    return rest
   }
 
   async getUserByUsername(name: string) {
     const regex = new RegExp(name, 'i')
     const users = await UserModel.find({ name: regex }).lean()
-    const responseData = users.map(({ password, _id, ...rest }) => rest)
+    const responseData = users.map((user) => ({
+      uid: user.uid,
+      name: user.name,
+      avatar: user.avatar,
+      bio: user.bio,
+      time: user.time,
+      status: user.status,
+    }))
     return responseData
   }
 
