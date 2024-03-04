@@ -10,21 +10,11 @@ class PLController {
 
     const timeStamp = parseInt(time)
     await PLService.createIncome(reason, timeStamp, amount)
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: {},
-    }
   }
 
   async createExpenditure(ctx: Context) {
     const { reason, time, amount } = ctx.request.body
     await PLService.createExpenditure(reason, time, amount)
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: {},
-    }
   }
 
   async getIncomes(ctx: Context) {
@@ -32,18 +22,7 @@ class PLController {
     const limit = parseInt(ctx.query.limit as string)
     const sortField = ctx.query.sortField as SortField
     const sortOrder = ctx.query.sortOrder as SortOrder
-
-    const incomes = await PLService.getIncomes(
-      page,
-      limit,
-      sortField,
-      sortOrder
-    )
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: incomes,
-    }
+    ctx.body = await PLService.getIncomes(page, limit, sortField, sortOrder)
   }
 
   async getExpenditures(ctx: Context) {
@@ -52,27 +31,16 @@ class PLController {
     const sortField = ctx.query.sortField as SortField
     const sortOrder = ctx.query.sortOrder as SortOrder
 
-    const expenditures = await PLService.getExpenditures(
+    ctx.body = await PLService.getExpenditures(
       page,
       limit,
       sortField,
       sortOrder
     )
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: expenditures,
-    }
   }
 
   async getPLStatement(ctx: Context) {
-    const responseData = await PLService.getPLStatement()
-
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: responseData,
-    }
+    ctx.body = await PLService.getPLStatement()
   }
 }
 

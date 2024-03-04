@@ -3,10 +3,9 @@ import env from '@/config/config.dev'
 import router from '@/routes/routes'
 import koaBody from 'koa-body'
 import cors from '@koa/cors'
-import serve from 'koa-static'
-import mount from 'koa-mount'
 import historyApiFallback from 'koa2-connect-history-api-fallback'
-import { kungalgameAuthMiddleware } from '@/middleware/authMiddleware'
+import { kungalgameAuthMiddleware } from '@/middleware/auth'
+import { kungalgameResponseMiddleware } from '@/middleware/response'
 import { useKUNGalgameTask } from '@/utils/schedule'
 import { kungalgameErrorHandler } from '@/error/kunErrorHandler'
 
@@ -45,11 +44,10 @@ app.use(
 )
 
 app.use(kungalgameAuthMiddleware())
+app.use(kungalgameResponseMiddleware())
 app.use(historyApiFallback({ whiteList: ['/'] }))
 
 app.use(router())
-
-app.use(mount('/uploads', serve('./uploads')))
 
 app.on('kunError', kungalgameErrorHandler)
 

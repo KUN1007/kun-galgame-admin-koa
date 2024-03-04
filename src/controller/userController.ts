@@ -20,7 +20,6 @@ class UserController {
     }
 
     const loginCD = await getValue(`loginCD:${name}`)
-
     if (loginCD) {
       ctx.app.emit('kunError', 10105, ctx)
       return
@@ -29,7 +28,6 @@ class UserController {
     }
 
     const result = await UserService.loginUser(name, password)
-
     if (typeof result === 'number') {
       ctx.app.emit('kunError', result, ctx)
       return
@@ -37,70 +35,34 @@ class UserController {
 
     setCookieAdminToken(ctx, result.token)
 
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: result,
-    }
+    ctx.body = result
   }
 
   async getUserByUsername(ctx: Context) {
     const name = ctx.query.name as string
-
-    const user = await UserService.getUserByUsername(name)
-
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: user,
-    }
+    ctx.body = await UserService.getUserByUsername(name)
   }
 
   async banUserByUid(ctx: Context) {
     const uid = ctx.request.body.uid as string
-
     await delValue(`refreshToken:${uid}`)
     await UserService.updateUserByUid(uid, 'status', '1')
-
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: {},
-    }
   }
 
   async unbanUserByUid(ctx: Context) {
     const uid = ctx.request.body.uid as string
     await UserService.updateUserByUid(uid, 'status', '0')
-
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: {},
-    }
   }
 
   async deleteUserByUid(ctx: Context) {
     const uid = ctx.params.uid as string
     await delValue(`refreshToken:${uid}`)
     await UserService.deleteUserByUid(parseInt(uid))
-
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: {},
-    }
   }
 
   async getUserByUid(ctx: Context) {
     const uid = parseInt(ctx.params.uid as string)
-    const user = await UserService.getUserByUid(uid)
-
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: user,
-    }
+    ctx.body = await UserService.getUserByUid(uid)
   }
 
   async updateUserByUid(ctx: Context) {
@@ -113,87 +75,50 @@ class UserController {
       fieldToUpdate,
       newFieldValue
     )
-
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: {},
-    }
   }
 
   async getUserTopics(ctx: Context) {
     const tidArray = ctx.query.tidArray as string
 
     if (!tidArray) {
-      ctx.body = {
-        code: 200,
-        message: 'OK',
-        data: [],
-      }
       return
     }
 
     const numberArray = tidArray.split(',').map((tid) => parseInt(tid))
-    const result = await UserService.getUserTopics(numberArray)
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: result,
-    }
+    ctx.body = await UserService.getUserTopics(numberArray)
   }
 
   async getUserReplies(ctx: Context) {
     const ridArray = ctx.query.ridArray as string
 
     if (!ridArray) {
-      ctx.body = {
-        code: 200,
-        message: 'OK',
-        data: [],
-      }
       return
     }
 
     const numberArray = ridArray.split(',').map((rid) => parseInt(rid))
-    const result = await UserService.getUserReplies(numberArray)
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: result,
-    }
+    ctx.body = await UserService.getUserReplies(numberArray)
   }
 
   async getUserComments(ctx: Context) {
     const cidArray = ctx.query.cidArray as string
 
     if (!cidArray) {
-      ctx.body = {
-        code: 200,
-        message: 'OK',
-        data: [],
-      }
       return
     }
 
     const numberArray = cidArray.split(',').map((cid) => parseInt(cid))
-    const result = await UserService.getUserComments(numberArray)
-    ctx.body = {
-      code: 200,
-      message: 'OK',
-      data: result,
-    }
+    ctx.body = await UserService.getUserComments(numberArray)
   }
 
   async getUserRanking(ctx: Context) {
     const { page, limit, sortField, sortOrder } = ctx.query
 
-    const topics = await UserService.getUserRanking(
+    ctx.body = await UserService.getUserRanking(
       parseInt(page as string),
       parseInt(limit as string),
       sortField as SortFieldRanking,
       sortOrder as SortOrder
     )
-    ctx.body = { code: 200, message: 'OK', data: topics }
   }
 }
 

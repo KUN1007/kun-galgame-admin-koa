@@ -4,7 +4,7 @@ import { verifyJWTPayloadByHeader } from '@/utils/jwt'
 const whitelistRegex =
   /^\/api\/(auth|public|user\/login|user\/register|balance|non-moe)|uploads\/avatar|uploads\/login/
 
-export function kungalgameAuthMiddleware(): Middleware {
+export const kungalgameAuthMiddleware = (): Middleware => {
   return async (ctx: Context, next: () => Promise<any>) => {
     const path = ctx.request.path
 
@@ -24,9 +24,9 @@ export function kungalgameAuthMiddleware(): Middleware {
     }
 
     const decoded = verifyJWTPayloadByHeader(authorizationHeader)
-
     if (!decoded) {
-      ctx.status = 205
+      ctx.status = 401
+      ctx.body = 'Unauthorized'
       return
     }
 
