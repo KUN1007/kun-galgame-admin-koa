@@ -7,6 +7,8 @@ router.prefix('/api/overview')
 
 router.get('/', OverviewController.getOverviewData)
 
+router.get('/sum', OverviewController.getSumData)
+
 router.get('/week', OverviewController.getWeekData)
 
 export default router

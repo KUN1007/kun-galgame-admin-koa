@@ -4,6 +4,10 @@ import OverviewService from '@/service/overviewService'
 type Field = 'topic' | 'reply' | 'comment' | 'user'
 
 class overviewController {
+  async getSumData(ctx: Context) {
+    ctx.body = await OverviewService.getSumData()
+  }
+
   async getOverviewData(ctx: Context) {
     const days = ctx.query.days as string
     ctx.body = await OverviewService.getOverviewData(parseInt(days))

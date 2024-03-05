@@ -6,22 +6,30 @@ import CommentModel from '@/models/comment'
 type Field = 'topic' | 'reply' | 'comment' | 'user'
 
 class OverviewService {
+  async getSumData() {
+    const topicCount = await TopicModel.countDocuments().lean()
+    const replyCount = await ReplyModel.countDocuments().lean()
+    const commentCount = await CommentModel.countDocuments().lean()
+    const userCount = await UserModel.countDocuments().lean()
+    return { topicCount, replyCount, commentCount, userCount }
+  }
+
   async getOverviewData(days: number) {
-    const oneDayAgo = new Date()
-    oneDayAgo.setDate(oneDayAgo.getDate() - days)
+    const time = new Date()
+    time.setDate(time.getDate() - days)
 
     const newTopics = await TopicModel.countDocuments({
-      createdAt: { $gte: oneDayAgo },
-    })
+      created: { $gte: time },
+    }).lean()
     const newReplies = await ReplyModel.countDocuments({
-      createdAt: { $gte: oneDayAgo },
-    })
+      created: { $gte: time },
+    }).lean()
     const newComments = await CommentModel.countDocuments({
-      createdAt: { $gte: oneDayAgo },
-    })
+      created: { $gte: time },
+    }).lean()
     const newUsers = await UserModel.countDocuments({
-      createdAt: { $gte: oneDayAgo },
-    })
+      created: { $gte: time },
+    }).lean()
 
     return { newTopics, newReplies, newComments, newUsers }
   }
