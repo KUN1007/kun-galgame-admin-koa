@@ -1,7 +1,7 @@
 import { Context } from 'koa'
 import OverviewService from '@/service/overviewService'
 
-type Field = 'topic' | 'reply' | 'comment' | 'user'
+type ModelName = 'topic' | 'reply' | 'comment' | 'user'
 
 class overviewController {
   async getSumData(ctx: Context) {
@@ -15,8 +15,8 @@ class overviewController {
 
   async getWeekData(ctx: Context) {
     const days = ctx.query.days as string
-    const field = ctx.query.field as Field
-    ctx.body = await OverviewService.getWeekData(parseInt(days), field)
+    const model = ctx.query.model as ModelName
+    ctx.body = await OverviewService.getLineChartData(parseInt(days), model)
   }
 }
 

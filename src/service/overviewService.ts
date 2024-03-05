@@ -2,8 +2,9 @@ import UserModel from '@/models/user'
 import TopicModel from '@/models/topic'
 import ReplyModel from '@/models/reply'
 import CommentModel from '@/models/comment'
+import mongoose from 'mongoose'
 
-type Field = 'topic' | 'reply' | 'comment' | 'user'
+type ModelName = 'topic' | 'reply' | 'comment' | 'user'
 
 class OverviewService {
   async getSumData() {
@@ -34,53 +35,48 @@ class OverviewService {
     return { newTopics, newReplies, newComments, newUsers }
   }
 
-  async getWeekData(days: number, field: Field) {
-    const time = new Date()
-    time.setDate(time.getDate() - days)
+  async getLineChartData(days: number, model: ModelName) {
+    const mongooseModel = mongoose.model(model)
 
-    let Model
-    switch (field) {
-      case 'topic':
-        Model = TopicModel
-        break
-      case 'reply':
-        Model = ReplyModel
-        break
-      case 'comment':
-        Model = CommentModel
-        break
-      case 'user':
-        Model = UserModel
-        break
-      default:
-        return
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const daysAgo = new Date(today)
+    daysAgo.setDate(today.getDate() - (days - 1))
+
+    const result = await mongooseModel
+      .aggregate([
+        {
+          $match: {
+            created: { $gte: daysAgo, $lte: today },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: '%Y-%m-%d', date: '$created' },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ])
+      .exec()
+
+    let filledResults: number[] = []
+    for (let i = 0; i < days; i++) {
+      const targetDate = new Date(daysAgo)
+      targetDate.setDate(daysAgo.getDate() + i)
+
+      const dateString = targetDate.toISOString().split('T')[0]
+      const found = result.find((r) => r._id === dateString)
+
+      filledResults.push(found ? found.count : 0)
     }
 
-    const result = await Model.aggregate([
-      {
-        $match: { createdAt: { $gte: time } },
-      },
-      {
-        $group: {
-          _id: {
-            year: { $year: '$createdAt' },
-            month: { $month: '$createdAt' },
-            day: { $dayOfMonth: '$createdAt' },
-          },
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 },
-      },
-    ])
-
-    const weekData = result.map((entry: any) => ({
-      date: new Date(entry._id.year, entry._id.month - 1, entry._id.day),
-      count: entry.count,
-    }))
-
-    return weekData
+    return filledResults
   }
 }
 

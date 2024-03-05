@@ -9,6 +9,6 @@ router.get('/', OverviewController.getOverviewData)
 
 router.get('/sum', OverviewController.getSumData)
 
-router.get('/week', OverviewController.getWeekData)
+router.get('/line', OverviewController.getWeekData)
 
 export default router
