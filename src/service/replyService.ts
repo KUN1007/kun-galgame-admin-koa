@@ -101,6 +101,28 @@ class ReplyService {
 
     await ReplyModel.deleteOne({ rid })
   }
+
+  async getNewReplyToday() {
+    const replies = await ReplyModel.find({}, 'tid rid content time')
+      .populate('r_user', 'uid avatar name')
+      .sort({ time: -1 })
+      .limit(7)
+      .lean()
+
+    const data = replies.map((reply) => ({
+      tid: reply.tid,
+      rid: reply.rid,
+      r_user: {
+        uid: reply.r_user[0].uid,
+        name: reply.r_user[0].name,
+        avatar: reply.r_user[0].avatar,
+      },
+      content: reply.content.slice(0, 233),
+      time: reply.time,
+    }))
+
+    return data
+  }
 }
 
 export default new ReplyService()

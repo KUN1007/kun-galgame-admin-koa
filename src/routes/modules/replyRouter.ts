@@ -11,4 +11,6 @@ router.put('/', ReplyController.updateReply)
 
 router.del('/', ReplyController.deleteReplyByRid)
 
+router.get('/today', ReplyController.getNewReplyToday)
+
 export default router

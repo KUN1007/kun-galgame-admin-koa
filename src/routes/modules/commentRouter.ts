@@ -11,4 +11,6 @@ router.put('/', CommentController.updateCommentsByCid)
 
 router.del('/', CommentController.deleteCommentsByCid)
 
+router.get('/today', CommentController.getNewCommentToday)
+
 export default router

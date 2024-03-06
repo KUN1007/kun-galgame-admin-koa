@@ -28,7 +28,6 @@ class CommentService {
       },
       content: comment.content,
       likes: comment.likes,
-      dislikes: comment.dislikes,
     }))
 
     return replyComments
@@ -51,7 +50,6 @@ class CommentService {
           comment_count: -1,
           moemoepoint: -commentInfo.likes.length,
           like: -commentInfo.likes.length,
-          dislike: -commentInfo.dislikes.length,
         },
       }
     )
@@ -74,6 +72,27 @@ class CommentService {
     )
 
     await CommentModel.deleteOne({ cid })
+  }
+
+  async getNewCommentToday() {
+    const comments = await CommentModel.find({}, 'tid cid content')
+      .populate('cuid', 'uid avatar name')
+      .sort({ time: -1 })
+      .limit(7)
+      .lean()
+
+    const data = comments.map((comment) => ({
+      tid: comment.tid,
+      cid: comment.cid,
+      c_user: {
+        uid: comment.cuid[0].uid,
+        avatar: comment.cuid[0].avatar,
+        name: comment.cuid[0].name,
+      },
+      content: comment.content,
+    }))
+
+    return data
   }
 }
 

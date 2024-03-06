@@ -16,6 +16,10 @@ class ReplyController {
     const rid = ctx.query.rid as string
     await ReplyService.deleteReplyByRid(parseInt(rid))
   }
+
+  async getNewReplyToday(ctx: Context) {
+    ctx.body = await ReplyService.getNewReplyToday()
+  }
 }
 
 export default new ReplyController()
