@@ -4,7 +4,6 @@ module.exports = {
   apps: [
     {
       name: 'kun-galgame-admin-koa',
-      port: 6666,
       script: './dist/kun.js',
       cwd: path.join(__dirname),
       instances: 1,
