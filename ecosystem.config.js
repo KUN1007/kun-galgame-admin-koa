@@ -3,7 +3,7 @@ const path = require('path')
 module.exports = {
   apps: [
     {
-      name: 'kun-galgame-koa',
+      name: 'kun-galgame-admin-koa',
       script: './dist/kun.js',
       cwd: path.join(__dirname),
       instances: 1,

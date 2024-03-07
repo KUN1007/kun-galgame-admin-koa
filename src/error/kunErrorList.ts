@@ -6,6 +6,7 @@ export const errorMessages: Record<number, string> = {
   10104: `Invalid Email, Name, Password, or Verification Code Format`,
   10105: `In cooldown for login, two identical login attempts should have a one-minute interval.`,
   10106: `You are not yet an administrator and cannot access the management system.`,
+  10107: `You are not superuser, can't execute delete operation.`,
 
   // Topic Part
   10201: `Topic title length exceed 40 characters. Or empty.`,

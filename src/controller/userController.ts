@@ -2,7 +2,6 @@ import { Context } from 'koa'
 import UserService from '@/service/userService'
 import { setCookieAdminToken, getCookieTokenInfo } from '@/utils/cookies'
 import { setValue, getValue, delValue } from '@/config/redisConfig'
-
 import { isValidEmail, isValidName, isValidPassword } from '@/utils/validate'
 
 import type { SortOrder, SortFieldRanking } from './types/userController'
@@ -55,6 +54,12 @@ class UserController {
   }
 
   async deleteUserByUid(ctx: Context) {
+    const roles = getCookieTokenInfo(ctx).roles
+    if (roles <= 2) {
+      ctx.app.emit('kunError', 10107, ctx)
+      return
+    }
+
     const uid = ctx.params.uid as string
     await delValue(`refreshToken:${uid}`)
     await UserService.deleteUserByUid(parseInt(uid))
@@ -63,18 +68,6 @@ class UserController {
   async getUserByUid(ctx: Context) {
     const uid = parseInt(ctx.params.uid as string)
     ctx.body = await UserService.getUserByUid(uid)
-  }
-
-  async updateUserByUid(ctx: Context) {
-    const uid = getCookieTokenInfo(ctx).uid
-
-    const { fieldToUpdate, newFieldValue } = ctx.request.body
-
-    await UserService.updateUserByUid(
-      uid.toString(),
-      fieldToUpdate,
-      newFieldValue
-    )
   }
 
   async getUserTopics(ctx: Context) {

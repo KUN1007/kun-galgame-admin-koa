@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 import TopicService from '@/service/topicService'
-
+import { getCookieTokenInfo } from '@/utils/cookies'
 import { checkTopicPublish } from './utils/checkTopicPublish'
 import type { SortOrder, SortFieldRanking } from './types/topicController'
 
@@ -25,6 +25,12 @@ class TopicController {
   }
 
   async deleteTopicByTid(ctx: Context) {
+    const roles = getCookieTokenInfo(ctx).roles
+    if (roles <= 2) {
+      ctx.app.emit('kunError', 10107, ctx)
+      return
+    }
+
     const tid = ctx.query.tid as string
     await TopicService.deleteTopicByTid(parseInt(tid))
   }

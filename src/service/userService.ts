@@ -55,12 +55,13 @@ class UserService {
     const isCorrectPassword = await bcrypt.compare(password, user.password)
 
     if (isCorrectPassword) {
-      const token = await generateLoginToken(user.uid, user.name)
+      const token = await generateLoginToken(user.uid, user.name, user.roles)
 
       const userInfo = {
         uid: user.uid,
         name: user.name,
         avatar: user.avatar,
+        roles: user.roles,
         token,
       }
 
