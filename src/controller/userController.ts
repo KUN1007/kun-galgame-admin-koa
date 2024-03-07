@@ -4,8 +4,6 @@ import { setCookieAdminToken, getCookieTokenInfo } from '@/utils/cookies'
 import { setValue, getValue, delValue } from '@/config/redisConfig'
 import { isValidEmail, isValidName, isValidPassword } from '@/utils/validate'
 
-import type { SortOrder, SortFieldRanking } from './types/userController'
-
 class UserController {
   async login(ctx: Context) {
     const { name, password } = ctx.request.body
@@ -101,17 +99,6 @@ class UserController {
 
     const numberArray = cidArray.split(',').map((cid) => parseInt(cid))
     ctx.body = await UserService.getUserComments(numberArray)
-  }
-
-  async getUserRanking(ctx: Context) {
-    const { page, limit, sortField, sortOrder } = ctx.query
-
-    ctx.body = await UserService.getUserRanking(
-      parseInt(page as string),
-      parseInt(limit as string),
-      sortField as SortFieldRanking,
-      sortOrder as SortOrder
-    )
   }
 }
 

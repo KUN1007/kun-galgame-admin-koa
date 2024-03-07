@@ -9,7 +9,6 @@ import CommentModel from '@/models/comment'
 
 import { generateLoginToken } from '@/utils/jwt'
 import type { LoginResponseData } from './types/userService'
-import type { SortOrder, SortFieldRanking } from './types/userService'
 
 class UserService {
   async getUserByUid(uid: number) {
@@ -130,34 +129,6 @@ class UserService {
       tid: comment.tid,
       content: comment.content.substring(0, 100),
     }))
-    return responseData
-  }
-
-  async getUserRanking(
-    page: number,
-    limit: number,
-    sortField: SortFieldRanking,
-    sortOrder: SortOrder
-  ) {
-    const skip = (page - 1) * limit
-
-    const sortOptions: Record<string, 'asc' | 'desc'> = {
-      [sortField]: sortOrder === 'asc' ? 'asc' : 'desc',
-    }
-
-    const users = await UserModel.find()
-      .sort(sortOptions)
-      .skip(skip)
-      .limit(limit)
-      .lean()
-
-    const responseData = users.map((user) => ({
-      uid: user.uid,
-      name: user.name,
-      avatar: user.avatar,
-      field: user[sortField],
-    }))
-
     return responseData
   }
 }
