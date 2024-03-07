@@ -1,13 +1,8 @@
-/*
- * 话题的 CRUD，定义了一些对话题数据的数据库交互操作
- */
-
 import TopicModel from '@/models/topic'
 import TagService from './tagService'
 import UserService from './userService'
 import mongoose from '@/db/connection'
 
-import type { SortOrder, SortFieldRanking } from './types/topicService'
 import UserModel from '@/models/user'
 import ReplyService from './replyService'
 
@@ -181,31 +176,25 @@ class TopicService {
     await TopicModel.updateOne({ tid }, { status })
   }
 
-  async getTopicRanking(
-    page: number,
-    limit: number,
-    sortField: SortFieldRanking,
-    sortOrder: SortOrder
-  ) {
-    const skip = (page - 1) * limit
-
-    const sortOptions: Record<string, 'asc' | 'desc'> = {
-      [sortField]: sortOrder === 'asc' ? 'asc' : 'desc',
-    }
-
-    const topics = await TopicModel.find()
-      .sort(sortOptions)
-      .skip(skip)
-      .limit(limit)
+  async getNewTopicToday() {
+    const topics = await TopicModel.find({}, 'tid title time popularity')
+      .populate('user', 'uid avatar name')
+      .sort({ time: -1 })
+      .limit(7)
       .lean()
 
-    const responseData = topics.map((topic) => ({
+    const data = topics.map((topic) => ({
       tid: topic.tid,
+      user: {
+        uid: topic.user[0].uid,
+        avatar: topic.user[0].avatar,
+        name: topic.user[0].name,
+      },
       title: topic.title,
-      field: topic[sortField],
+      time: topic.time,
     }))
 
-    return responseData
+    return data
   }
 }
 

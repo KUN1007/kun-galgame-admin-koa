@@ -16,6 +16,10 @@ class CommentController {
     const cid = ctx.query.cid as string
     await CommentService.deleteCommentsByCid(parseInt(cid))
   }
+
+  async getNewCommentToday(ctx: Context) {
+    ctx.body = await CommentService.getNewCommentToday()
+  }
 }
 
 export default new CommentController()

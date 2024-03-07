@@ -2,7 +2,6 @@ import { Context } from 'koa'
 import TopicService from '@/service/topicService'
 import { getCookieTokenInfo } from '@/utils/cookies'
 import { checkTopicPublish } from './utils/checkTopicPublish'
-import type { SortOrder, SortFieldRanking } from './types/topicController'
 
 class TopicController {
   async updateTopicByTid(ctx: Context) {
@@ -40,15 +39,8 @@ class TopicController {
     await TopicService.updateTopicStatus(parseInt(tid), parseInt(status))
   }
 
-  async getTopicRanking(ctx: Context) {
-    const { page, limit, sortField, sortOrder } = ctx.query
-
-    ctx.body = await TopicService.getTopicRanking(
-      parseInt(page as string),
-      parseInt(limit as string),
-      sortField as SortFieldRanking,
-      sortOrder as SortOrder
-    )
+  async getNewTopicToday(ctx: Context) {
+    ctx.body = await TopicService.getNewTopicToday()
   }
 }
 
