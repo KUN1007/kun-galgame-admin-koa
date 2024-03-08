@@ -66,7 +66,7 @@ class OverviewService {
       .exec()
 
     let filledResults: number[] = []
-    for (let i = 0; i < days; i++) {
+    for (let i = days - 1; i >= 0; i--) {
       const targetDate = new Date(daysAgo)
       targetDate.setDate(daysAgo.getDate() + i)
 

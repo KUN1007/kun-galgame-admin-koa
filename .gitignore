@@ -6,6 +6,7 @@ dist/
 
 # env
 .env
+.env.production
 
 # uploads
 uploads/avatar
