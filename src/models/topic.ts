@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
 
 import { TopicAttributes } from './types/topic'

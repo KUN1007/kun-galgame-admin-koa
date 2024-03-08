@@ -2,7 +2,7 @@ import UserModel from '@/models/user'
 import TopicModel from '@/models/topic'
 import ReplyModel from '@/models/reply'
 import CommentModel from '@/models/comment'
-import mongoose from 'mongoose'
+import mongoose from '@/db/connection'
 
 type ModelName = 'topic' | 'reply' | 'comment' | 'user'
 

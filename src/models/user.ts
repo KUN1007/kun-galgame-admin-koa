@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
 
 import type { UserAttributes } from './types/user'
