@@ -10,30 +10,30 @@ class CommentController {
 
   async updateCommentsByCid(ctx: Context) {
     const { cid, content } = ctx.request.body
+
     const comment = await CommentService.getCommentByCid(cid)
-
-    await CommentService.updateCommentsByCid(cid, content)
-
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
       `${user.name} updated a comment\ncid: ${cid}\ntid: ${comment.tid}\nOriginal comment: ${comment.content}`
     )
+
+    await CommentService.updateCommentsByCid(cid, content)
   }
 
   async deleteCommentsByCid(ctx: Context) {
     const cid = ctx.query.cid as string
+
     const comment = await CommentService.getCommentByCid(parseInt(cid))
-
-    await CommentService.deleteCommentsByCid(parseInt(cid))
-
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
       'delete',
       `${user.name} deleted a comment\ncid: ${cid}\ntid: ${comment.tid}\nOriginal comment: ${comment.content}`
     )
+
+    await CommentService.deleteCommentsByCid(parseInt(cid))
   }
 
   async getNewCommentToday(ctx: Context) {

@@ -1,5 +1,6 @@
 import { Context } from 'koa'
 import UserService from '@/service/userService'
+import AdminInfoService from '@/service/adminInfoService'
 import { setCookieAdminToken, getCookieTokenInfo } from '@/utils/cookies'
 import { setValue, getValue, delValue } from '@/config/redisConfig'
 import { isValidEmail, isValidName, isValidPassword } from '@/utils/validate'
@@ -42,12 +43,32 @@ class UserController {
 
   async banUserByUid(ctx: Context) {
     const uid = ctx.request.body.uid as string
+
+    const banUser = await UserService.getUserInfoByUid(parseInt(uid), ['name'])
+    const user = ctx.state.user
+    await AdminInfoService.createAdminInfo(
+      user.uid,
+      'update',
+      `${user.name} banned ${banUser.name}\nUID: ${uid}`
+    )
+
     await delValue(`refreshToken:${uid}`)
     await UserService.updateUserByUid(uid, 'status', '1')
   }
 
   async unbanUserByUid(ctx: Context) {
     const uid = ctx.request.body.uid as string
+
+    const unbanUser = await UserService.getUserInfoByUid(parseInt(uid), [
+      'name',
+    ])
+    const user = ctx.state.user
+    await AdminInfoService.createAdminInfo(
+      user.uid,
+      'update',
+      `${user.name} unbanned ${unbanUser.name}\nUID: ${uid}`
+    )
+
     await UserService.updateUserByUid(uid, 'status', '0')
   }
 
@@ -59,6 +80,16 @@ class UserController {
     }
 
     const uid = ctx.params.uid as string
+
+    const deletedUser = await UserService.getUserByUid(parseInt(uid))
+    const userString = JSON.stringify(deletedUser)
+    const user = ctx.state.user
+    await AdminInfoService.createAdminInfo(
+      user.uid,
+      'delete',
+      `${user.name} deleted ${deletedUser.name}\nUID: ${uid}\nUser Info: ${userString}`
+    )
+
     await delValue(`refreshToken:${uid}`)
     await UserService.deleteUserByUid(parseInt(uid))
   }

@@ -6,6 +6,12 @@ import TopicModel from '@/models/topic'
 import commentService from './commentService'
 
 class ReplyService {
+  async getReplyByRid(rid: number) {
+    const reply = await ReplyModel.findOne({ rid }).lean()
+    const { tid, content } = reply
+    return { tid, content }
+  }
+
   async updateReply(tid: number, rid: number, content: string, tags: string[]) {
     const session = await mongoose.startSession()
     session.startTransaction()

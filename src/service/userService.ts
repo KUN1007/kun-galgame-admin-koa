@@ -13,7 +13,7 @@ import type { LoginResponseData } from './types/userService'
 class UserService {
   async getUserByUid(uid: number) {
     const user = await UserModel.findOne({ uid }).lean()
-    const { password, _id, ...rest } = user
+    const { password, ...rest } = user
     return rest
   }
 
@@ -33,7 +33,7 @@ class UserService {
 
   async getUserInfoByUid(uid: number, fieldsToSelect: string[]) {
     const userProjection = fieldsToSelect.join(' ')
-    const user = await UserModel.findOne({ uid }).select(userProjection)
+    const user = await UserModel.findOne({ uid }).select(userProjection).lean()
     return user
   }
 
