@@ -1,7 +1,7 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
 
-import { ExpenditureAttributes } from './types/expenditure'
+import type { ExpenditureAttributes } from './types/expenditure'
 
 const ExpenditureSchema = new mongoose.Schema<ExpenditureAttributes>(
   {

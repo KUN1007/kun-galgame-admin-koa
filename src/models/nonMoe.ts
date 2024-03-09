@@ -1,7 +1,7 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
 
-import { NonMoeAttributes } from './types/nonMoe'
+import type { NonMoeAttributes } from './types/nonMoe'
 
 const NonMoeSchema = new mongoose.Schema<NonMoeAttributes>(
   {

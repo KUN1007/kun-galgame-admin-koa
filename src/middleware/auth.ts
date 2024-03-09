@@ -40,7 +40,7 @@ export const kungalgameAuthMiddleware = (): Middleware => {
       return
     }
 
-    ctx.state.uid = decoded.uid
+    ctx.state.user = decoded
 
     await next()
   }

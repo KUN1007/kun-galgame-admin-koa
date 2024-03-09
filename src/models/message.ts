@@ -1,7 +1,7 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
 
-import { MessageAttributes } from './types/message'
+import type { MessageAttributes } from './types/message'
 
 const MessageSchema = new mongoose.Schema<MessageAttributes>(
   {

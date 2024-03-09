@@ -4,6 +4,12 @@ import TopicModel from '@/models/topic'
 import UserModel from '@/models/user'
 
 class CommentService {
+  async getCommentByCid(cid: number) {
+    const comment = await CommentModel.findOne({ cid }).lean()
+    const { tid, content } = comment
+    return { tid, content }
+  }
+
   async getComments(content: string) {
     const regex = new RegExp(content, 'i')
 

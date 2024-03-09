@@ -1,7 +1,7 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
 
-import { TagAttributes } from './types/tag'
+import type { TagAttributes } from './types/tag'
 
 const TagSchema = new mongoose.Schema<TagAttributes>(
   {

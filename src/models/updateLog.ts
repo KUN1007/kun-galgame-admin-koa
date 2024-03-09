@@ -1,7 +1,7 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
 
-import { UpdateLogAttributes } from './types/updateLog'
+import type { UpdateLogAttributes } from './types/updateLog'
 
 const UpdateLogSchema = new mongoose.Schema<UpdateLogAttributes>(
   {

@@ -1,7 +1,7 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
 
-import { IncomeAttributes } from './types/income'
+import type { IncomeAttributes } from './types/income'
 
 const IncomeSchema = new mongoose.Schema<IncomeAttributes>(
   {

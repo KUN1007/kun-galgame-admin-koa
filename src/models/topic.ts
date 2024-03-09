@@ -1,7 +1,7 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
 
-import { TopicAttributes } from './types/topic'
+import type { TopicAttributes } from './types/topic'
 
 const TopicSchema = new mongoose.Schema<TopicAttributes>(
   {
