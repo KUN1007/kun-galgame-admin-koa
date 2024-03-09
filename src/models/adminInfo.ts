@@ -7,6 +7,7 @@ const AdminInfoSchema = new mongoose.Schema<AdminInfoAttributes>(
   {
     ai_id: { type: Number, unique: true },
     uid: { type: Number, required: true, ref: 'user' },
+    type: { type: String, required: true },
     content: { type: String, default: '' },
     time: { type: Number, default: Date.now() },
   },

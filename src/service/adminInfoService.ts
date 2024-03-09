@@ -1,9 +1,12 @@
 import AdminInfoModel from '@/models/adminInfo'
 
+type AdminInfo = 'get' | 'put' | 'update' | 'delete' | 'global'
+
 class AdminInfoService {
-  async createAdminInfo(uid: number, content: string) {
+  async createAdminInfo(uid: number, type: AdminInfo, content: string) {
     const newAdminInfo = new AdminInfoModel({
       uid,
+      type,
       content,
     })
 
@@ -27,6 +30,7 @@ class AdminInfoService {
         avatar: info.sender[0].avatar,
         name: info.sender[0].name,
       },
+      type: info.type,
       content: info.content,
       time: info.time,
     }))
