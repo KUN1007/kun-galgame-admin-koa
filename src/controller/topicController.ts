@@ -26,9 +26,14 @@ class TopicController {
   }
 
   async getTopicsByContentApi(ctx: Context) {
-    const keywords = ctx.query.keywords
+    const keywords = ctx.query.keywords as string
+    if (!keywords.trim()) {
+      ctx.app.emit('kunError', 10601, ctx)
+      return
+    }
+
     ctx.body = await TopicService.getTopicsByContentApi(
-      (keywords as string).trim().slice(0, 40)
+      keywords.trim().slice(0, 40)
     )
   }
 

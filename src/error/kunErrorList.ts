@@ -23,4 +23,7 @@ export const errorMessages: Record<number, string> = {
   10502: `Single tag maximum length is 17 characters`,
   10503: `Reply content is empty`,
   10504: `Reply maximum length is 10007 characters`,
+
+  // Check Part
+  10601: `Input can not be empty.`,
 }

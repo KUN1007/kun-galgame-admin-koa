@@ -38,6 +38,10 @@ class UserController {
 
   async getUserByUsername(ctx: Context) {
     const name = ctx.query.name as string
+    if (!name.trim()) {
+      ctx.app.emit('kunError', 10601, ctx)
+      return
+    }
     ctx.body = await UserService.getUserByUsername(name)
   }
 

@@ -19,6 +19,11 @@ class ReplyController {
 
   async getReplies(ctx: Context) {
     const content = ctx.query.content as string
+    if (!content.trim()) {
+      ctx.app.emit('kunError', 10601, ctx)
+      return
+    }
+
     ctx.body = await ReplyService.getReplies(content)
   }
 
