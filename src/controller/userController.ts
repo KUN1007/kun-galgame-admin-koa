@@ -84,10 +84,13 @@ class UserController {
     }
 
     const uid = ctx.params.uid as string
-
-    const deletedUser = await UserService.getUserByUid(parseInt(uid))
-    const userString = JSON.stringify(deletedUser)
     const user = ctx.state.user
+
+    const deletedUser = await UserService.getUserByUid(
+      parseInt(uid),
+      user.roles
+    )
+    const userString = JSON.stringify(deletedUser)
     await AdminInfoService.createAdminInfo(
       user.uid,
       'delete',
@@ -100,7 +103,8 @@ class UserController {
 
   async getUserByUid(ctx: Context) {
     const uid = parseInt(ctx.params.uid as string)
-    ctx.body = await UserService.getUserByUid(uid)
+    const user = ctx.state.user
+    ctx.body = await UserService.getUserByUid(uid, user.roles)
   }
 
   async getUserTopics(ctx: Context) {

@@ -11,10 +11,12 @@ import { generateLoginToken } from '@/utils/jwt'
 import type { LoginResponseData } from './types/userService'
 
 class UserService {
-  async getUserByUid(uid: number) {
+  async getUserByUid(uid: number, roles: number) {
     const user = await UserModel.findOne({ uid }).lean()
-    const { password, ...rest } = user
-    return rest
+    const { password, email, ip, ...rest } = user
+    const modifiedRest = roles > 2 ? { email, ip, ...rest } : rest
+
+    return modifiedRest
   }
 
   async getUserByUsername(name: string) {
