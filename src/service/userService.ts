@@ -75,7 +75,7 @@ class UserService {
   async updateUserByUid(
     uid: string,
     fieldToUpdate: string,
-    newFieldValue: string
+    newFieldValue: string | number
   ) {
     await UserModel.updateOne(
       { uid },

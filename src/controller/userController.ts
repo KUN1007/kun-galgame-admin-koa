@@ -45,6 +45,27 @@ class UserController {
     ctx.body = await UserService.getUserByUsername(name)
   }
 
+  async updateUserRoles(ctx: Context) {
+    const cookieAdminRoles = getCookieTokenInfo(ctx).roles
+    if (cookieAdminRoles <= 2) {
+      ctx.app.emit('kunError', 10107, ctx)
+      return
+    }
+
+    const uid = ctx.request.body.uid as string
+    const roles = parseInt(ctx.request.body.roles as string)
+
+    const user = ctx.state.user
+    const adminUser = await UserService.getUserByUid(parseInt(uid), 1)
+    await AdminInfoService.createAdminInfo(
+      user.uid,
+      'update',
+      `${user.name} set ${adminUser.name} as administrator\nUID: ${uid}`
+    )
+
+    await UserService.updateUserByUid(uid, 'roles', roles)
+  }
+
   async banUserByUid(ctx: Context) {
     const uid = ctx.request.body.uid as string
 
@@ -57,7 +78,7 @@ class UserController {
     )
 
     await delValue(`refreshToken:${uid}`)
-    await UserService.updateUserByUid(uid, 'status', '1')
+    await UserService.updateUserByUid(uid, 'status', 1)
   }
 
   async unbanUserByUid(ctx: Context) {
@@ -73,7 +94,7 @@ class UserController {
       `${user.name} unbanned ${unbanUser.name}\nUID: ${uid}`
     )
 
-    await UserService.updateUserByUid(uid, 'status', '0')
+    await UserService.updateUserByUid(uid, 'status', 0)
   }
 
   async deleteUserByUid(ctx: Context) {
@@ -86,10 +107,7 @@ class UserController {
     const uid = ctx.params.uid as string
     const user = ctx.state.user
 
-    const deletedUser = await UserService.getUserByUid(
-      parseInt(uid),
-      user.roles
-    )
+    const deletedUser = await UserService.getUserByUid(parseInt(uid), 1)
     const userString = JSON.stringify(deletedUser)
     await AdminInfoService.createAdminInfo(
       user.uid,
