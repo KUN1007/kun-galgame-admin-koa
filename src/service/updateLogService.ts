@@ -1,9 +1,18 @@
 import UpdateLogModel from '@/models/updateLog'
-import { UpdateLogAttributes } from '@/models/types/updateLog'
 
 class UpdateLogService {
-  async createUpdateLog(updateLogData: UpdateLogAttributes) {
-    const newUpdateLog = new UpdateLogModel(updateLogData)
+  async createUpdateLog(
+    description: string,
+    time: string,
+    language: Language,
+    version: string
+  ) {
+    const newUpdateLog = new UpdateLogModel({
+      description,
+      language,
+      time,
+      version,
+    })
     const savedUpdateLog = await newUpdateLog.save()
     return savedUpdateLog
   }

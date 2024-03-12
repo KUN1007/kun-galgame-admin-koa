@@ -3,8 +3,13 @@ import UpdateLogService from '@/service/updateLogService'
 
 class UpdateLogController {
   async createUpdateLog(ctx: Context) {
-    const { body } = ctx.request
-    ctx.body = await UpdateLogService.createUpdateLog(body)
+    const { description, language, time, version } = ctx.request.body
+    ctx.body = await UpdateLogService.createUpdateLog(
+      description,
+      language,
+      time,
+      version
+    )
   }
 
   async getUpdateLogs(ctx: Context) {
