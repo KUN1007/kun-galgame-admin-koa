@@ -1,6 +1,6 @@
 import AdminInfoModel from '@/models/adminInfo'
 
-type AdminInfo = 'get' | 'put' | 'update' | 'delete' | 'global'
+type AdminInfo = 'get' | 'post' | 'update' | 'delete' | 'global'
 
 class AdminInfoService {
   async createAdminInfo(uid: number, type: AdminInfo, content: string) {

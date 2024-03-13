@@ -1,5 +1,6 @@
 import { Context } from 'koa'
 import UpdateLogService from '@/service/updateLogService'
+import AdminInfoService from '@/service/adminInfoService'
 
 class UpdateLogController {
   async createUpdateLog(ctx: Context) {
@@ -10,12 +11,24 @@ class UpdateLogController {
       time,
       version
     )
+
+    const user = ctx.state.user
+    await AdminInfoService.createAdminInfo(
+      user.uid,
+      'post',
+      `${user.name} create an update log\nUpdate Version: ${version}`
+    )
   }
 
   async getUpdateLogs(ctx: Context) {
-    const page = parseInt(ctx.query.page as string)
-    const limit = parseInt(ctx.query.limit as string)
-    ctx.body = await UpdateLogService.getUpdateLogs(page, limit)
+    const page = ctx.query.page as string
+    const limit = ctx.query.limit as string
+    const language = ctx.query.language as Language
+    ctx.body = await UpdateLogService.getUpdateLogs(
+      parseInt(page),
+      parseInt(limit),
+      language
+    )
   }
 
   async updateUpdateLog(ctx: Context) {
