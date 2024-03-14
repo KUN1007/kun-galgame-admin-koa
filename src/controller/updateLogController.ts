@@ -17,7 +17,7 @@ class UpdateLogController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'post',
-      `${user.name} create an update log\nUpdate Version: ${version}`
+      `${user.name} created an update log\nUpdate Version: ${version}`
     )
   }
 

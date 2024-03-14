@@ -11,7 +11,7 @@ class TodoController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'post',
-      `${user.name} create a todo\nContent: ${content}`
+      `${user.name} created a todo\nContent: ${content}`
     )
   }
 
@@ -35,7 +35,7 @@ class TodoController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} update a todo\nTodo ID: ${todo.todo_id}\nOriginal todo content: ${todo.content}\nOriginal todo status: ${todo.status}`
+      `${user.name} updated a todo\nTodo ID: ${todo.todo_id}\nOriginal todo content: ${todo.content}\nOriginal todo status: ${todo.status}`
     )
 
     await TodoService.updateTodo(todoId, content, status)
