@@ -2,12 +2,14 @@ import UpdateLogModel from '@/models/updateLog'
 
 class UpdateLogService {
   async createUpdateLog(
+    type: string,
     description: string,
     language: Language,
     time: string,
     version: string
   ) {
     const newUpdateLog = new UpdateLogModel({
+      type,
       description,
       language,
       time,

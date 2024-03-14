@@ -6,8 +6,9 @@ import type { UpdateLogAttributes } from './types/updateLog'
 const UpdateLogSchema = new mongoose.Schema<UpdateLogAttributes>(
   {
     upid: { type: Number, unique: true },
-    description: { type: String, required: true, default: '' },
-    language: { type: String, required: true, default: '' },
+    type: { type: String, required: true },
+    description: { type: String, required: true },
+    language: { type: String, required: true },
     time: { type: String, default: '' },
     version: { type: String, default: '' },
   },
