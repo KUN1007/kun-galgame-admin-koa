@@ -8,6 +8,7 @@ class AdminInfoService {
       uid,
       type,
       content,
+      time: Date.now(),
     })
 
     await newAdminInfo.save()
@@ -18,7 +19,7 @@ class AdminInfoService {
 
     const adminInfos = await AdminInfoModel.find()
       .populate('sender', 'uid avatar name')
-      .sort({ time: -1 })
+      .sort({ ai_id: -1 })
       .skip(skip)
       .limit(limit)
       .lean()

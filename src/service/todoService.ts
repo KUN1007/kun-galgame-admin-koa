@@ -6,7 +6,12 @@ class TodoService {
   }
 
   async createTodo(content: string, status: number, language: Language) {
-    const newTodo = new TodoModel({ content, status, language })
+    const newTodo = new TodoModel({
+      content,
+      status,
+      language,
+      time: Date.now(),
+    })
     const savedTodo = await newTodo.save()
     return savedTodo
   }
@@ -38,9 +43,8 @@ class TodoService {
     await TodoModel.updateOne({ todo_id }, { content, status })
   }
 
-  async deleteTodo(id: number) {
-    const deletedTodo = await TodoModel.findByIdAndDelete(id)
-    return deletedTodo
+  async deleteTodo(todo_id: number) {
+    await TodoModel.deleteOne({ todo_id })
   }
 }
 
