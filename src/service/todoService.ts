@@ -1,8 +1,12 @@
 import TodoModel from '@/models/todo'
 
 class TodoService {
-  async createTodo(content: string, language: Language) {
-    const newTodo = new TodoModel({ content, language })
+  async getTodoByTodoId(todoId: number) {
+    return await TodoModel.findOne({ todo_id: todoId })
+  }
+
+  async createTodo(content: string, status: number, language: Language) {
+    const newTodo = new TodoModel({ content, status, language })
     const savedTodo = await newTodo.save()
     return savedTodo
   }
@@ -30,13 +34,8 @@ class TodoService {
     return data
   }
 
-  async updateTodo(upid: number, description: string, version: string) {
-    const updatedTodo = await TodoModel.findByIdAndUpdate(
-      upid,
-      { description, version },
-      { new: true }
-    )
-    return updatedTodo
+  async updateTodo(todo_id: number, content: string, status: number) {
+    await TodoModel.updateOne({ todo_id }, { content, status })
   }
 
   async deleteTodo(id: number) {
