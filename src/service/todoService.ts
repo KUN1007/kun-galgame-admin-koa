@@ -40,7 +40,12 @@ class TodoService {
   }
 
   async updateTodo(todo_id: number, content: string, status: number) {
-    await TodoModel.updateOne({ todo_id }, { content, status })
+    const time = status === 2 ? Date.now() : 0
+
+    await TodoModel.updateOne(
+      { todo_id },
+      { content, status, completed_time: time }
+    )
   }
 
   async deleteTodo(todo_id: number) {
