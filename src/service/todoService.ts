@@ -5,23 +5,21 @@ class TodoService {
     return await TodoModel.findOne({ todo_id: todoId })
   }
 
-  async createTodo(content: string, status: number, language: Language) {
+  async createTodo(contentEn: string, contentZh: string, status: number) {
     const newTodo = new TodoModel({
-      content,
+      content_en_us: contentEn,
+      content_zh_cn: contentZh,
       status,
-      language,
       time: Date.now(),
     })
     const savedTodo = await newTodo.save()
     return savedTodo
   }
 
-  async getTodos(page: number, limit: number, language?: Language) {
+  async getTodos(page: number, limit: number) {
     const skip = (page - 1) * limit
 
-    const findOptions = language ? { language } : {}
-
-    const todos = await TodoModel.find(findOptions)
+    const todos = await TodoModel.find()
       .sort({ todo_id: -1 })
       .skip(skip)
       .limit(limit)
@@ -30,8 +28,8 @@ class TodoService {
     const data = todos.map((todo) => ({
       todoId: todo.todo_id,
       status: todo.status,
-      content: todo.content,
-      language: todo.language,
+      contentEn: todo.content_en_us,
+      contentZh: todo.content_zh_cn,
       time: todo.time,
       completedTime: todo.completed_time,
     }))
@@ -39,12 +37,22 @@ class TodoService {
     return data
   }
 
-  async updateTodo(todo_id: number, content: string, status: number) {
+  async updateTodo(
+    todo_id: number,
+    contentEn: string,
+    contentZh: string,
+    status: number
+  ) {
     const time = status === 2 ? Date.now() : 0
 
     await TodoModel.updateOne(
       { todo_id },
-      { content, status, completed_time: time }
+      {
+        content_en_us: contentEn,
+        content_zh_cn: contentZh,
+        status,
+        completed_time: time,
+      }
     )
   }
 
