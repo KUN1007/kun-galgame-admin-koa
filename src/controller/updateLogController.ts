@@ -4,11 +4,11 @@ import AdminInfoService from '@/service/adminInfoService'
 
 class UpdateLogController {
   async createUpdateLog(ctx: Context) {
-    const { type, description, language, time, version } = ctx.request.body
+    const { type, contentEn, contentZh, time, version } = ctx.request.body
     ctx.body = await UpdateLogService.createUpdateLog(
       type,
-      description,
-      language,
+      contentEn,
+      contentZh,
       time,
       version
     )
@@ -24,26 +24,26 @@ class UpdateLogController {
   async getUpdateLogs(ctx: Context) {
     const page = ctx.query.page as string
     const limit = ctx.query.limit as string
-    const language = ctx.query.language as Language
+
     ctx.body = await UpdateLogService.getUpdateLogs(
       parseInt(page),
-      parseInt(limit),
-      language
+      parseInt(limit)
     )
   }
 
   async updateUpdateLog(ctx: Context) {
-    const { upid, description, version } = ctx.request.body
+    const { upid, contentEn, contentZh, version } = ctx.request.body
     ctx.body = await UpdateLogService.updateUpdateLog(
       upid,
-      description,
+      contentEn,
+      contentZh,
       version
     )
   }
 
   async deleteUpdateLog(ctx: Context) {
     const upid = parseInt(ctx.query.upid as string)
-    ctx.body = await UpdateLogService.deleteUpdateLog(upid)
+    await UpdateLogService.deleteUpdateLog(upid)
   }
 }
 
