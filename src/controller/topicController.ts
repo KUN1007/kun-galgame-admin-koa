@@ -6,9 +6,9 @@ import { checkTopicPublish } from './utils/checkTopicPublish'
 
 class TopicController {
   async updateTopicByTid(ctx: Context) {
-    const { tid, title, content, tags, category } = ctx.request.body
+    const { tid, title, content, tags, category, section } = ctx.request.body
 
-    const res = checkTopicPublish(title, content, tags, category)
+    const res = checkTopicPublish(title, content, tags, category, section)
     if (res) {
       ctx.app.emit('kunError', res, ctx)
       return
@@ -19,10 +19,17 @@ class TopicController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} updated a topic\ntid: ${topic.tid}\nOriginal topic:\nTitle: ${topic.title}\nContent: ${topic.content}\nTags: ${topic.tags}Category: ${topic.category}`
+      `${user.name} updated a topic\ntid: ${topic.tid}\nOriginal topic:\nTitle: ${topic.title}\nContent: ${topic.content}\nTags: ${topic.tags}\nCategory: ${topic.category}\nSection: ${topic.section}`
     )
 
-    await TopicService.updateTopicByTid(tid, title, content, tags, category)
+    await TopicService.updateTopicByTid(
+      tid,
+      title,
+      content,
+      tags,
+      category,
+      section
+    )
   }
 
   async getTopicsByContentApi(ctx: Context) {
@@ -47,11 +54,12 @@ class TopicController {
     const tid = ctx.query.tid as string
 
     const topic = await TopicService.getTopicByTid(parseInt(tid))
+    const topicString = JSON.stringify(topic)
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
       'delete',
-      `${user.name} deleted a topic\ntid: ${topic.tid}\nOriginal topic:\nTitle: ${topic.title}\nContent: ${topic.content}\nTags: ${topic.tags}Category: ${topic.category}`
+      `${user.name} deleted a topic\n${topicString}`
     )
 
     await TopicService.deleteTopicByTid(parseInt(tid))

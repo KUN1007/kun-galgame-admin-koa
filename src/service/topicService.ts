@@ -12,12 +12,16 @@ class TopicService {
     title: string,
     content: string,
     tags: string[],
-    category: string[]
+    category: string[],
+    section: string[]
   ) {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
-      await TopicModel.updateOne({ tid }, { title, content, tags, category })
+      await TopicModel.updateOne(
+        { tid },
+        { title, content, tags, category, section }
+      )
 
       await TagService.updateTagsByTidAndRid(tid, 0, tags, category)
 
@@ -69,6 +73,7 @@ class TopicService {
         status: topic.status,
         share: topic.share,
         category: topic.category,
+        section: topic.section,
         popularity: topic.popularity,
         upvote_time: topic.upvote_time,
       }
@@ -115,6 +120,7 @@ class TopicService {
       },
       title: topic.title,
       category: topic.category,
+      section: topic.section,
       tags: topic.tags,
       content: topic.content,
       time: topic.time,

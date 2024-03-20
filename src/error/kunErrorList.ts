@@ -14,6 +14,8 @@ export const errorMessages: Record<number, string> = {
   10203: `Topic with a maximum of 7 tags. Minimum one tag.`,
   10204: `Topic with a maximum of 2 categories. Minimum one category.`,
   10205: `Invalid topics timestamp.`,
+  10206: `Please select three known categories. (-B)`,
+  10207: `Topic with a maximum of 2 sections. Minimum one section. (-B)`,
 
   // Comment Part
   10401: `Comment length exceed 1007 characters. Or empty.`,
