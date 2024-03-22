@@ -32,7 +32,11 @@ class TodoService {
       status: todo.status,
       contentEn: todo.content_en_us,
       contentZh: todo.content_zh_cn,
+      creator: todo.creator,
+      creator_id: todo.creator_id,
       time: todo.time,
+      completer: todo.completer,
+      completer_id: todo.completer_id,
       completedTime: todo.completed_time,
     }))
 
