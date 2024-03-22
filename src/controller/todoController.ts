@@ -5,14 +5,17 @@ import AdminInfoService from '@/service/adminInfoService'
 class TodoController {
   async createTodo(ctx: Context) {
     const { contentEn, contentZh, status } = ctx.request.body
-    ctx.body = await TodoService.createTodo(contentEn, contentZh, status)
-
+    
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
       'post',
       `${user.name} created a todo\nContent: ${contentEn}`
     )
+
+    ctx.body = await TodoService.createTodo(
+      user.name, user.id, 
+      contentEn, contentZh, status)
   }
 
   async getTodos(ctx: Context) {
@@ -33,7 +36,10 @@ class TodoController {
       `${user.name} updated a todo\nTodo ID: ${todo.todo_id}\nOriginal todo content: ${todo.content_en_us}\nOriginal todo status: ${todo.status}`
     )
 
-    await TodoService.updateTodo(todoId, contentEn, contentZh, status)
+    await TodoService.updateTodo(
+      todoId, 
+      user.name, user.id,
+      contentEn, contentZh, status)
   }
 
   async deleteTodo(ctx: Context) {

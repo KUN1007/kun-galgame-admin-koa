@@ -5,11 +5,13 @@ class TodoService {
     return await TodoModel.findOne({ todo_id: todoId })
   }
 
-  async createTodo(contentEn: string, contentZh: string, status: number) {
+  async createTodo(creator: string, creator_id: number, contentEn: string, contentZh: string, status: number) {
     const newTodo = new TodoModel({
       content_en_us: contentEn,
       content_zh_cn: contentZh,
       status,
+      creator,
+      creator_id,
       time: Date.now(),
     })
     const savedTodo = await newTodo.save()
@@ -30,7 +32,11 @@ class TodoService {
       status: todo.status,
       contentEn: todo.content_en_us,
       contentZh: todo.content_zh_cn,
+      creator: todo.creator,
+      creator_id: todo.creator_id,
       time: todo.time,
+      completer: todo.completer,
+      completer_id: todo.completer_id,
       completedTime: todo.completed_time,
     }))
 
@@ -39,6 +45,8 @@ class TodoService {
 
   async updateTodo(
     todo_id: number,
+    updater: string, 
+    updater_id: number, 
     contentEn: string,
     contentZh: string,
     status: number
@@ -48,6 +56,8 @@ class TodoService {
     await TodoModel.updateOne(
       { todo_id },
       {
+        completer: status === 2 ? updater : null,
+        completer_id: status === 2 ? updater_id : null,
         content_en_us: contentEn,
         content_zh_cn: contentZh,
         status,
