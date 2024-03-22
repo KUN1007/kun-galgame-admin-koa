@@ -60,14 +60,14 @@ class TodoService {
     contentEn: string,
     contentZh: string,
     status: number,
-    completerUid?: number
+    completerUid: number
   ) {
     const time = status === 2 ? Date.now() : 0
 
     await TodoModel.updateOne(
       { todo_id },
       {
-        completer_uid: completerUid ?? 0,
+        completer_uid: completerUid,
         content_en_us: contentEn,
         content_zh_cn: contentZh,
         status,
