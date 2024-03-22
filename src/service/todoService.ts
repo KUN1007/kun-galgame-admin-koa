@@ -5,13 +5,17 @@ class TodoService {
     return await TodoModel.findOne({ todo_id: todoId })
   }
 
-  async createTodo(creator: string, creator_id: number, contentEn: string, contentZh: string, status: number) {
+  async createTodo(
+    creatorUid: number,
+    contentEn: string,
+    contentZh: string,
+    status: number
+  ) {
     const newTodo = new TodoModel({
+      completer_uid: creatorUid,
       content_en_us: contentEn,
       content_zh_cn: contentZh,
       status,
-      creator,
-      creator_id,
       time: Date.now(),
     })
     const savedTodo = await newTodo.save()
@@ -25,6 +29,8 @@ class TodoService {
       .sort({ todo_id: -1 })
       .skip(skip)
       .limit(limit)
+      .populate('creator', 'uid avatar name')
+      .populate('completer', 'uid avatar name')
       .lean()
 
     const data = todos.map((todo) => ({
@@ -32,11 +38,17 @@ class TodoService {
       status: todo.status,
       contentEn: todo.content_en_us,
       contentZh: todo.content_zh_cn,
-      creator: todo.creator,
-      creator_id: todo.creator_id,
+      creator: {
+        uid: todo.creator[0].uid,
+        avatar: todo.creator[0].avatar,
+        name: todo.creator[0].name,
+      },
       time: todo.time,
-      completer: todo.completer,
-      completer_id: todo.completer_id,
+      completer: {
+        uid: todo.completer[0].uid,
+        avatar: todo.completer[0].avatar,
+        name: todo.completer[0].name,
+      },
       completedTime: todo.completed_time,
     }))
 
@@ -45,19 +57,17 @@ class TodoService {
 
   async updateTodo(
     todo_id: number,
-    updater: string, 
-    updater_id: number, 
     contentEn: string,
     contentZh: string,
-    status: number
+    status: number,
+    completerUid?: number
   ) {
     const time = status === 2 ? Date.now() : 0
 
     await TodoModel.updateOne(
       { todo_id },
       {
-        completer: status === 2 ? updater : null,
-        completer_id: status === 2 ? updater_id : null,
+        completer_uid: completerUid ?? 0,
         content_en_us: contentEn,
         content_zh_cn: contentZh,
         status,

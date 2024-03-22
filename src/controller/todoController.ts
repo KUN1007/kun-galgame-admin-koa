@@ -4,8 +4,8 @@ import AdminInfoService from '@/service/adminInfoService'
 
 class TodoController {
   async createTodo(ctx: Context) {
-    const { contentEn, contentZh, status } = ctx.request.body
-    
+    const { creatorUid, contentEn, contentZh, status } = ctx.request.body
+
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
@@ -14,8 +14,11 @@ class TodoController {
     )
 
     ctx.body = await TodoService.createTodo(
-      user.name, user.id, 
-      contentEn, contentZh, status)
+      creatorUid,
+      contentEn,
+      contentZh,
+      status
+    )
   }
 
   async getTodos(ctx: Context) {
@@ -26,7 +29,8 @@ class TodoController {
   }
 
   async updateTodo(ctx: Context) {
-    const { todoId, contentEn, contentZh, status } = ctx.request.body
+    const { todoId, contentEn, contentZh, status, completerUid } =
+      ctx.request.body
 
     const todo = await TodoService.getTodoByTodoId(todoId)
     const user = ctx.state.user
@@ -37,9 +41,12 @@ class TodoController {
     )
 
     await TodoService.updateTodo(
-      todoId, 
-      user.name, user.id,
-      contentEn, contentZh, status)
+      todoId,
+      contentEn,
+      contentZh,
+      status,
+      completerUid
+    )
   }
 
   async deleteTodo(ctx: Context) {

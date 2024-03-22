@@ -1,14 +1,7 @@
 import jwt from 'jsonwebtoken'
 import env from '@/config/config.dev'
 import { setValue } from '@/config/redisConfig'
-
-interface Payload {
-  iss: string
-  aud: string
-  uid: number
-  name: string
-  roles: number
-}
+import type { Payload } from '@/types/payload'
 
 export function verifyJWTPayloadByHeader(authHeader: string) {
   const token = authHeader.split(' ')[1]
