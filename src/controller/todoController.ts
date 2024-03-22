@@ -14,7 +14,7 @@ class TodoController {
     )
 
     ctx.body = await TodoService.createTodo(
-      user.id, user.name, 
+      user.name, user.id, 
       contentEn, contentZh, status)
   }
 
@@ -38,7 +38,7 @@ class TodoController {
 
     await TodoService.updateTodo(
       todoId, 
-      user.id,user.name,
+      user.name, user.id,
       contentEn, contentZh, status)
   }
 
