@@ -12,14 +12,13 @@ class TodoService {
     status: number
   ) {
     const newTodo = new TodoModel({
-      completer_uid: creatorUid,
+      creator_uid: creatorUid,
       content_en_us: contentEn,
       content_zh_cn: contentZh,
       status,
       time: Date.now(),
     })
-    const savedTodo = await newTodo.save()
-    return savedTodo
+    await newTodo.save()
   }
 
   async getTodos(page: number, limit: number) {

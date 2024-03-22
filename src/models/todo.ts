@@ -11,7 +11,7 @@ const TodoSchema = new mongoose.Schema<TodoAttributes>(
     content_zh_cn: { type: String, require: true },
     creator_uid: { type: Number, require: true, ref: 'user' },
     time: { type: Number, default: Date.now() },
-    completer_uid: { type: Number, default: 0, ref: 'user' },
+    completer_uid: { type: Number, default: 2, ref: 'user' },
     completed_time: { type: Number, default: 0 },
   },
   { timestamps: { createdAt: 'created', updatedAt: 'updated' } }

@@ -5,7 +5,7 @@ import AdminInfoService from '@/service/adminInfoService'
 class UpdateLogController {
   async createUpdateLog(ctx: Context) {
     const { type, contentEn, contentZh, time, version } = ctx.request.body
-    ctx.body = await UpdateLogService.createUpdateLog(
+    await UpdateLogService.createUpdateLog(
       type,
       contentEn,
       contentZh,

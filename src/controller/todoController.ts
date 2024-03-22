@@ -13,12 +13,7 @@ class TodoController {
       `${user.name} created a todo\nContent: ${contentEn}`
     )
 
-    ctx.body = await TodoService.createTodo(
-      user.uid,
-      contentEn,
-      contentZh,
-      status
-    )
+    await TodoService.createTodo(user.uid, contentEn, contentZh, status)
   }
 
   async getTodos(ctx: Context) {
