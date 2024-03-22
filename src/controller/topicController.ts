@@ -34,7 +34,9 @@ class TopicController {
 
   async getTopicsByContentApi(ctx: Context) {
     const keywords = ctx.query.keywords as string
-    if (!keywords.trim()) {
+    const roles = getCookieTokenInfo(ctx).roles
+
+    if (!keywords.trim() && roles < 3) {
       ctx.app.emit('kunError', 10601, ctx)
       return
     }
