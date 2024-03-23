@@ -9,7 +9,7 @@ const AdminInfoSchema = new mongoose.Schema<AdminInfoAttributes>(
     uid: { type: Number, required: true, ref: 'user' },
     type: { type: String, required: true },
     content: { type: String, default: '' },
-    time: { type: Number, default: Date.now() },
+    time: { type: Number, default: Date.now() }
   },
   { timestamps: { createdAt: 'created', updatedAt: 'updated' } }
 )
@@ -17,7 +17,7 @@ const AdminInfoSchema = new mongoose.Schema<AdminInfoAttributes>(
 AdminInfoSchema.virtual('sender', {
   ref: 'user',
   localField: 'uid',
-  foreignField: 'uid',
+  foreignField: 'uid'
 })
 
 AdminInfoSchema.pre('save', increasingSequence('ai_id'))

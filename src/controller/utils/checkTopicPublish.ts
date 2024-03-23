@@ -15,7 +15,7 @@ export const checkTopicPublish = (
     return 10202
   }
 
-  if (!tags.length || tags.length > 7) {
+  if (tags.length === 0 || tags.length > 7) {
     return 10203
   }
 
@@ -25,7 +25,7 @@ export const checkTopicPublish = (
     }
   }
 
-  if (!category.length || category.length > 2) {
+  if (category.length === 0 || category.length > 2) {
     return 10204
   }
 
@@ -35,7 +35,7 @@ export const checkTopicPublish = (
     }
   }
 
-  if (!section.length || section.length > 2) {
+  if (section.length === 0 || section.length > 2) {
     return 10207
   }
 

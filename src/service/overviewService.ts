@@ -7,7 +7,7 @@ import mongoose from '@/db/connection'
 type ModelName = 'topic' | 'reply' | 'comment' | 'user'
 
 class OverviewService {
-  async getSumData() {
+  async getSumData () {
     const topicCount = await TopicModel.countDocuments().lean()
     const replyCount = await ReplyModel.countDocuments().lean()
     const commentCount = await CommentModel.countDocuments().lean()
@@ -15,27 +15,27 @@ class OverviewService {
     return { topicCount, replyCount, commentCount, userCount }
   }
 
-  async getOverviewData(days: number) {
+  async getOverviewData (days: number) {
     const time = new Date()
     time.setDate(time.getDate() - days)
 
     const newTopics = await TopicModel.countDocuments({
-      created: { $gte: time },
+      created: { $gte: time }
     }).lean()
     const newReplies = await ReplyModel.countDocuments({
-      created: { $gte: time },
+      created: { $gte: time }
     }).lean()
     const newComments = await CommentModel.countDocuments({
-      created: { $gte: time },
+      created: { $gte: time }
     }).lean()
     const newUsers = await UserModel.countDocuments({
-      created: { $gte: time },
+      created: { $gte: time }
     }).lean()
 
     return { newTopics, newReplies, newComments, newUsers }
   }
 
-  async getLineChartData(days: number, model: ModelName) {
+  async getLineChartData (days: number, model: ModelName) {
     const mongooseModel = mongoose.model(model)
 
     const today = new Date()
@@ -48,24 +48,24 @@ class OverviewService {
       .aggregate([
         {
           $match: {
-            created: { $gte: daysAgo, $lte: today },
-          },
+            created: { $gte: daysAgo, $lte: today }
+          }
         },
         {
           $group: {
             _id: {
-              $dateToString: { format: '%Y-%m-%d', date: '$created' },
+              $dateToString: { format: '%Y-%m-%d', date: '$created' }
             },
-            count: { $sum: 1 },
-          },
+            count: { $sum: 1 }
+          }
         },
         {
-          $sort: { _id: 1 },
-        },
+          $sort: { _id: 1 }
+        }
       ])
       .exec()
 
-    let filledResults: number[] = []
+    const filledResults: number[] = []
     for (let i = days - 1; i >= 0; i--) {
       const targetDate = new Date(daysAgo)
       targetDate.setDate(daysAgo.getDate() + i)

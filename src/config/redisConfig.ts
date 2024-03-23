@@ -2,8 +2,8 @@ import Redis from 'ioredis'
 import env from '@/config/config.dev'
 
 const redisClient = new Redis({
-  port: parseInt(env.REDIS_PORT),
-  host: env.REDIS_HOST,
+  port: parseInt(env.REDIS_PORT!),
+  host: env.REDIS_HOST
 })
 
 redisClient.on('connect', () => {

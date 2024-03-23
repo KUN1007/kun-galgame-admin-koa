@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import TodoService from '@/service/todoService'
 import AdminInfoService from '@/service/adminInfoService'
 
@@ -31,7 +31,7 @@ class TodoController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} updated a todo\nTodo ID: ${todo.todo_id}\nOriginal todo content: ${todo.content_en_us}\nOriginal todo status: ${todo.status}`
+      `${user.name} updated a todo\nTodo ID: ${todo?.todo_id}\nOriginal todo content: ${todo?.content_en_us}\nOriginal todo status: ${todo?.status}`
     )
 
     await TodoService.updateTodo(todoId, contentEn, contentZh, status, user.uid)
@@ -41,11 +41,12 @@ class TodoController {
     const todoId = parseInt(ctx.query.todoId as string)
 
     const todo = await TodoService.getTodoByTodoId(todoId)
+    const todoString = JSON.stringify(todo)
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
       'delete',
-      `${user.name} deleted a todo\nOriginal todo: ${todo}`
+      `${user.name} deleted a todo\nOriginal todo: ${todoString}`
     )
 
     await TodoService.deleteTodo(todoId)

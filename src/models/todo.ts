@@ -12,7 +12,7 @@ const TodoSchema = new mongoose.Schema<TodoAttributes>(
     creator_uid: { type: Number, require: true, ref: 'user' },
     time: { type: Number, default: Date.now() },
     completer_uid: { type: Number, default: 2, ref: 'user' },
-    completed_time: { type: Number, default: 0 },
+    completed_time: { type: Number, default: 0 }
   },
   { timestamps: { createdAt: 'created', updatedAt: 'updated' } }
 )
@@ -20,13 +20,13 @@ const TodoSchema = new mongoose.Schema<TodoAttributes>(
 TodoSchema.virtual('creator', {
   ref: 'user',
   localField: 'creator_uid',
-  foreignField: 'uid',
+  foreignField: 'uid'
 })
 
 TodoSchema.virtual('completer', {
   ref: 'user',
   localField: 'completer_uid',
-  foreignField: 'uid',
+  foreignField: 'uid'
 })
 
 TodoSchema.pre('save', increasingSequence('todo_id'))

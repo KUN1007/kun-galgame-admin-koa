@@ -4,13 +4,13 @@ import TopicModel from '@/models/topic'
 import UserModel from '@/models/user'
 
 class CommentService {
-  async getCommentByCid(cid: number) {
+  async getCommentByCid (cid: number) {
     const comment = await CommentModel.findOne({ cid }).lean()
     const { tid, content } = comment
     return { tid, content }
   }
 
-  async getComments(content: string) {
+  async getComments (content: string) {
     const regex = new RegExp(content, 'i')
 
     const comment = await CommentModel.find({ content: regex })
@@ -25,44 +25,44 @@ class CommentService {
       c_user: {
         uid: comment.cuid[0].uid,
         avatar: comment.cuid[0].avatar,
-        name: comment.cuid[0].name,
+        name: comment.cuid[0].name
       },
       to_user: {
         uid: comment.touid[0].uid,
         avatar: comment.touid[0].avatar,
-        name: comment.touid[0].name,
+        name: comment.touid[0].name
       },
       content: comment.content,
-      likes: comment.likes,
+      likes: comment.likes
     }))
 
     return replyComments
   }
 
-  async updateCommentsByCid(cid: number, content: string) {
+  async updateCommentsByCid (cid: number, content: string) {
     await CommentModel.updateOne({ cid }, { content })
   }
 
-  async deleteCommentsByCid(cid: number) {
+  async deleteCommentsByCid (cid: number) {
     const commentInfo = await CommentModel.findOne({ cid }).lean()
 
     await UserModel.updateOne(
       {
-        uid: commentInfo.c_uid,
+        uid: commentInfo.c_uid
       },
       {
         $pull: { comment: commentInfo.cid },
         $inc: {
           comment_count: -1,
           moemoepoint: -commentInfo.likes.length,
-          like: -commentInfo.likes.length,
-        },
+          like: -commentInfo.likes.length
+        }
       }
     )
 
     await UserModel.updateOne(
       {
-        uid: commentInfo.to_uid,
+        uid: commentInfo.to_uid
       },
       { $inc: { moemoepoint: -1, like: -1 } }
     )
@@ -80,7 +80,7 @@ class CommentService {
     await CommentModel.deleteOne({ cid })
   }
 
-  async getNewCommentToday() {
+  async getNewCommentToday () {
     const comments = await CommentModel.find({}, 'tid cid content')
       .populate('cuid', 'uid avatar name')
       .sort({ time: -1 })
@@ -93,9 +93,9 @@ class CommentService {
       c_user: {
         uid: comment.cuid[0].uid,
         avatar: comment.cuid[0].avatar,
-        name: comment.cuid[0].name,
+        name: comment.cuid[0].name
       },
-      content: comment.content,
+      content: comment.content
     }))
 
     return data

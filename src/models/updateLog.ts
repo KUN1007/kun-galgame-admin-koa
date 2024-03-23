@@ -10,7 +10,7 @@ const UpdateLogSchema = new mongoose.Schema<UpdateLogAttributes>(
     content_en_us: { type: String, require: true },
     content_zh_cn: { type: String, require: true },
     time: { type: String, default: '' },
-    version: { type: String, default: '' },
+    version: { type: String, default: '' }
   },
   { timestamps: { createdAt: 'created', updatedAt: 'updated' } }
 )

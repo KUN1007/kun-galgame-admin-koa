@@ -11,15 +11,19 @@ import { generateLoginToken } from '@/utils/jwt'
 import type { LoginResponseData } from './types/userService'
 
 class UserService {
-  async getUserByUid(uid: number, roles: number) {
+  async getUserByUid (uid: number, roles: number) {
     const user = await UserModel.findOne({ uid }).lean()
+    if (!user) {
+      return
+    }
+
     const { password, email, ip, ...rest } = user
     const modifiedRest = roles > 2 ? { email, ip, ...rest } : rest
 
     return modifiedRest
   }
 
-  async getUserByUsername(name: string) {
+  async getUserByUsername (name: string) {
     const regex = new RegExp(name, 'i')
     const users = await UserModel.find({ name: regex }).lean()
     const responseData = users.map((user) => ({
@@ -28,18 +32,18 @@ class UserService {
       avatar: user.avatar,
       bio: user.bio,
       time: user.time,
-      status: user.status,
+      status: user.status
     }))
     return responseData
   }
 
-  async getUserInfoByUid(uid: number, fieldsToSelect: string[]) {
+  async getUserInfoByUid (uid: number, fieldsToSelect: string[]) {
     const userProjection = fieldsToSelect.join(' ')
     const user = await UserModel.findOne({ uid }).select(userProjection).lean()
     return user
   }
 
-  async loginUser(
+  async loginUser (
     name: string,
     password: string
   ): Promise<number | LoginResponseData> {
@@ -63,7 +67,7 @@ class UserService {
         name: user.name,
         avatar: user.avatar,
         roles: user.roles,
-        token,
+        token
       }
 
       return userInfo
@@ -72,7 +76,7 @@ class UserService {
     }
   }
 
-  async updateUserByUid(
+  async updateUserByUid (
     uid: string,
     fieldToUpdate: string,
     newFieldValue: string | number
@@ -83,8 +87,12 @@ class UserService {
     )
   }
 
-  async deleteUserByUid(uid: number) {
+  async deleteUserByUid (uid: number) {
     const user = await UserModel.findOne({ uid }).lean()
+    if (!user) {
+      return
+    }
+
     for (const tid of user.topic) {
       await TopicService.deleteTopicByTid(tid)
     }
@@ -100,36 +108,36 @@ class UserService {
     await UserModel.deleteOne({ uid })
   }
 
-  async getUserTopics(tidArray: number[]) {
+  async getUserTopics (tidArray: number[]) {
     const topics = await TopicModel.find({ tid: { $in: tidArray } }).limit(50)
 
     const responseData = topics.map((topic) => ({
       tid: topic.tid,
       title: topic.title,
-      time: topic.time,
+      time: topic.time
     }))
     return responseData
   }
 
-  async getUserReplies(ridArray: number[]) {
+  async getUserReplies (ridArray: number[]) {
     const replies = await ReplyModel.find({ rid: { $in: ridArray } }).limit(50)
 
     const responseData = replies.map((reply) => ({
       tid: reply.tid,
       content: reply.content.substring(0, 100),
-      time: reply.time,
+      time: reply.time
     }))
     return responseData
   }
 
-  async getUserComments(cidArray: number[]) {
+  async getUserComments (cidArray: number[]) {
     const comments = await CommentModel.find({ cid: { $in: cidArray } }).limit(
       50
     )
 
     const responseData = comments.map((comment) => ({
       tid: comment.tid,
-      content: comment.content.substring(0, 100),
+      content: comment.content.substring(0, 100)
     }))
     return responseData
   }

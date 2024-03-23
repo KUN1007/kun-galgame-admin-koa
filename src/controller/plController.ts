@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import PLService from '@/service/plService'
 
 type SortField = 'time' | 'amount'

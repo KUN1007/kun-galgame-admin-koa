@@ -10,7 +10,7 @@ class PLService {
     const newIncome = new IncomeModel({
       reason,
       time,
-      amount,
+      amount
     })
 
     await newIncome.save()
@@ -20,7 +20,7 @@ class PLService {
     const newExpenditure = new ExpenditureModel({
       reason,
       time,
-      amount,
+      amount
     })
 
     await newExpenditure.save()
@@ -35,7 +35,7 @@ class PLService {
     const skip = (page - 1) * limit
 
     const sortOptions: Record<string, 'asc' | 'desc'> = {
-      [sortField]: sortOrder === 'asc' ? 'asc' : 'desc',
+      [sortField]: sortOrder === 'asc' ? 'asc' : 'desc'
     }
 
     const incomeDetails = await IncomeModel.find()
@@ -48,7 +48,7 @@ class PLService {
       iid: income.iid,
       reason: income.reason,
       time: income.time,
-      amount: income.amount,
+      amount: income.amount
     }))
 
     return responseData
@@ -63,7 +63,7 @@ class PLService {
     const skip = (page - 1) * limit
 
     const sortOptions: Record<string, 'asc' | 'desc'> = {
-      [sortField]: sortOrder === 'asc' ? 'asc' : 'desc',
+      [sortField]: sortOrder === 'asc' ? 'asc' : 'desc'
     }
 
     const expenditureModelDetails = await ExpenditureModel.find()
@@ -76,7 +76,7 @@ class PLService {
       eid: expenditure.eid,
       reason: expenditure.reason,
       time: expenditure.time,
-      amount: expenditure.amount,
+      amount: expenditure.amount
     }))
 
     return responseData
@@ -90,18 +90,18 @@ class PLService {
         {
           $group: {
             _id: null,
-            totalIncome: { $sum: '$amount' },
-          },
-        },
+            totalIncome: { $sum: '$amount' }
+          }
+        }
       ])
 
       const totalExpenditureResult = await ExpenditureModel.aggregate([
         {
           $group: {
             _id: null,
-            totalExpenditure: { $sum: '$amount' },
-          },
-        },
+            totalExpenditure: { $sum: '$amount' }
+          }
+        }
       ])
 
       const totalIncome: number =
@@ -114,17 +114,17 @@ class PLService {
       const profitLoss = totalIncome - totalExpenditure
 
       await session.commitTransaction()
-      session.endSession()
 
       return {
         totalIncome,
         totalExpenditure,
-        profitLoss,
+        profitLoss
       }
     } catch (error) {
       await session.abortTransaction()
-      session.endSession()
       throw error
+    } finally {
+      await session.endSession()
     }
   }
 }

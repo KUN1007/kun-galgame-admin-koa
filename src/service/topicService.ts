@@ -7,7 +7,7 @@ import UserModel from '@/models/user'
 import ReplyService from './replyService'
 
 class TopicService {
-  async updateTopicByTid(
+  async updateTopicByTid (
     tid: number,
     title: string,
     content: string,
@@ -18,39 +18,39 @@ class TopicService {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
-      await TopicModel.updateOne(
-        { tid },
-        { title, content, tags, category, section }
-      )
+      await TopicModel.updateOne({ tid }, { title, content, tags, category, section })
 
       await TagService.updateTagsByTidAndRid(tid, 0, tags, category)
 
       await session.commitTransaction()
-      session.endSession()
     } catch (error) {
       await session.abortTransaction()
-      session.endSession()
       throw error
+    } finally {
+      await session.endSession()
     }
   }
 
-  async getTopicByTid(tid: number) {
+  async getTopicByTid (tid: number) {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
       const topic = await TopicModel.findOne({ tid }).lean()
+      if (!topic) {
+        return
+      }
 
-      await TopicModel.updateOne(
-        { tid },
-        { $inc: { views: 1, popularity: 0.1 } }
-      )
+      await TopicModel.updateOne({ tid }, { $inc: { views: 1, popularity: 0.1 } })
 
       const userInfo = await UserService.getUserInfoByUid(topic.uid, [
         'uid',
         'avatar',
         'name',
-        'moemoepoint',
+        'moemoepoint'
       ])
+      if (!userInfo) {
+        return
+      }
 
       const data = {
         tid: topic.tid,
@@ -67,7 +67,7 @@ class TopicService {
           uid: userInfo.uid,
           name: userInfo.name,
           avatar: userInfo.avatar,
-          moemoepoint: userInfo.moemoepoint,
+          moemoepoint: userInfo.moemoepoint
         },
         replies: topic.replies,
         status: topic.status,
@@ -75,24 +75,21 @@ class TopicService {
         category: topic.category,
         section: topic.section,
         popularity: topic.popularity,
-        upvote_time: topic.upvote_time,
+        upvote_time: topic.upvote_time
       }
 
       await session.commitTransaction()
-      session.endSession()
-
       return data
     } catch (error) {
       await session.abortTransaction()
-      session.endSession()
       throw error
+    } finally {
+      await session.endSession()
     }
   }
 
-  async getTopicsByContentApi(keywords: string) {
-    const keywordsArray: string[] = keywords
-      .split(' ')
-      .filter((keyword) => keyword.trim() !== '')
+  async getTopicsByContentApi (keywords: string) {
+    const keywordsArray: string[] = keywords.split(' ').filter((keyword) => keyword.trim() !== '')
 
     const escapedKeywords = keywordsArray.map((keyword) =>
       keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -103,20 +100,18 @@ class TopicService {
         { title: { $regex: escapedKeywords.join('|'), $options: 'i' } },
         { content: { $regex: escapedKeywords.join('|'), $options: 'i' } },
         { category: { $in: escapedKeywords } },
-        { tags: { $in: escapedKeywords } },
-      ],
+        { tags: { $in: escapedKeywords } }
+      ]
     }
 
-    const topics = await TopicModel.find(searchQuery)
-      .populate('user', 'uid avatar name')
-      .lean()
+    const topics = await TopicModel.find(searchQuery).populate('user', 'uid avatar name').lean()
 
     const data = topics.map((topic) => ({
       tid: topic.tid,
       user: {
         uid: topic.user[0].uid,
         avatar: topic.user[0].avatar,
-        name: topic.user[0].name,
+        name: topic.user[0].name
       },
       title: topic.title,
       category: topic.category,
@@ -129,14 +124,17 @@ class TopicService {
       replies: topic.replies_count,
 
       edited: topic.edited,
-      status: topic.status,
+      status: topic.status
     }))
 
     return data
   }
 
-  async deleteTopicByTid(tid: number) {
+  async deleteTopicByTid (tid: number) {
     const topic = await TopicModel.findOne({ tid }).lean()
+    if (!topic) {
+      return
+    }
 
     const decreaseAmount = topic.likes.length + topic.upvotes.length * 7
     await UserModel.updateOne(
@@ -149,8 +147,8 @@ class TopicService {
           moemoepoint: -decreaseAmount,
           upvote: -topic.upvotes.length,
           like: -topic.likes.length,
-          dislike: -topic.dislikes.length,
-        },
+          dislike: -topic.dislikes.length
+        }
       }
     )
 
@@ -178,11 +176,11 @@ class TopicService {
     await TopicModel.deleteOne({ tid })
   }
 
-  async updateTopicStatus(tid: number, status: number) {
+  async updateTopicStatus (tid: number, status: number) {
     await TopicModel.updateOne({ tid }, { status })
   }
 
-  async getNewTopicToday() {
+  async getNewTopicToday () {
     const topics = await TopicModel.find({}, 'tid title time popularity')
       .populate('user', 'uid avatar name')
       .sort({ time: -1 })
@@ -194,10 +192,10 @@ class TopicService {
       user: {
         uid: topic.user[0].uid,
         avatar: topic.user[0].avatar,
-        name: topic.user[0].name,
+        name: topic.user[0].name
       },
       title: topic.title,
-      time: topic.time,
+      time: topic.time
     }))
 
     return data

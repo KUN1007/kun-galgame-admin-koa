@@ -1,4 +1,4 @@
-import { Context, Middleware } from 'koa'
+import { type Context, type Middleware } from 'koa'
 import { verifyJWTPayloadByHeader } from '@/utils/jwt'
 
 const whitelistRegex =

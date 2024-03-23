@@ -1,9 +1,9 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import OverviewService from '@/service/overviewService'
 
 type ModelName = 'topic' | 'reply' | 'comment' | 'user'
 
-class overviewController {
+class OverviewController {
   async getSumData(ctx: Context) {
     ctx.body = await OverviewService.getSumData()
   }
@@ -20,4 +20,4 @@ class overviewController {
   }
 }
 
-export default new overviewController()
+export default new OverviewController()

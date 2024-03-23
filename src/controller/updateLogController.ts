@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import UpdateLogService from '@/service/updateLogService'
 import AdminInfoService from '@/service/adminInfoService'
 
@@ -33,12 +33,7 @@ class UpdateLogController {
 
   async updateUpdateLog(ctx: Context) {
     const { upid, contentEn, contentZh, version } = ctx.request.body
-    ctx.body = await UpdateLogService.updateUpdateLog(
-      upid,
-      contentEn,
-      contentZh,
-      version
-    )
+    await UpdateLogService.updateUpdateLog(upid, contentEn, contentZh, version)
   }
 
   async deleteUpdateLog(ctx: Context) {

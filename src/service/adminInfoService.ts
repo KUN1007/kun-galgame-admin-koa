@@ -3,18 +3,18 @@ import AdminInfoModel from '@/models/adminInfo'
 type AdminInfo = 'get' | 'post' | 'update' | 'delete' | 'global'
 
 class AdminInfoService {
-  async createAdminInfo(uid: number, type: AdminInfo, content: string) {
+  async createAdminInfo (uid: number, type: AdminInfo, content: string) {
     const newAdminInfo = new AdminInfoModel({
       uid,
       type,
       content,
-      time: Date.now(),
+      time: Date.now()
     })
 
     await newAdminInfo.save()
   }
 
-  async getAdminInfo(page: number, limit: number) {
+  async getAdminInfo (page: number, limit: number) {
     const skip = (page - 1) * limit
 
     const adminInfos = await AdminInfoModel.find()
@@ -29,11 +29,11 @@ class AdminInfoService {
       user: {
         uid: info.sender[0].uid,
         avatar: info.sender[0].avatar,
-        name: info.sender[0].name,
+        name: info.sender[0].name
       },
       type: info.type,
       content: info.content,
-      time: info.time,
+      time: info.time
     }))
 
     return data

@@ -7,7 +7,7 @@ export function verifyJWTPayloadByHeader(authHeader: string) {
   const token = authHeader.split(' ')[1]
 
   try {
-    const payload = jwt.verify(token, env.JWT_SECRET) as Payload
+    const payload = jwt.verify(token, env.JWT_SECRET!) as Payload
     return payload
   } catch (error) {
     return null
@@ -16,7 +16,7 @@ export function verifyJWTPayloadByHeader(authHeader: string) {
 
 export function verifyJWTPayload(token: string) {
   try {
-    const payload = jwt.verify(token, env.JWT_SECRET) as Payload
+    const payload = jwt.verify(token, env.JWT_SECRET!) as Payload
     return payload
   } catch (error) {
     return null
@@ -30,13 +30,13 @@ export function generateToken(
   expire: string
 ) {
   const payload: Payload = {
-    iss: env.JWT_ISS,
-    aud: env.JWT_AUD,
+    iss: env.JWT_ISS!,
+    aud: env.JWT_AUD!,
     uid,
     name,
-    roles,
+    roles
   }
-  const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: expire })
+  const token = jwt.sign(payload, env.JWT_SECRET!, { expiresIn: expire })
   return token
 }
 

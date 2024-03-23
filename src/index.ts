@@ -19,13 +19,13 @@ app.use(
   cors({
     origin: (ctx: Koa.Context) => {
       const origin = ctx.get('Origin')
-      if (env.ALLOW_DOMAIN.includes(origin)) {
+      if (env.ALLOW_DOMAIN!.includes(origin)) {
         return origin
       }
       return ''
     },
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
+    credentials: true
   })
 )
 
@@ -35,11 +35,11 @@ app.use(
     formidable: {
       uploadDir: env.TEMP_FILE_PATH,
       keepExtensions: true,
-      maxFieldsSize: 1007 * 1024,
+      maxFieldsSize: 1007 * 1024
     },
     onError: (err) => {
       console.log('koa-body: err', err)
-    },
+    }
   })
 )
 
@@ -51,4 +51,4 @@ app.use(router())
 
 app.on('kunError', kungalgameErrorHandler)
 
-app.listen(parseInt(env.APP_PORT), '127.0.0.1', () => {})
+app.listen(parseInt(env.APP_PORT!), '127.0.0.1', () => {})

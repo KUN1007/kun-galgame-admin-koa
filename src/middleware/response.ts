@@ -1,4 +1,4 @@
-import { Context, Middleware } from 'koa'
+import { type Context, type Middleware } from 'koa'
 
 export const kungalgameResponseMiddleware = (): Middleware => {
   return async (ctx: Context, next: () => Promise<any>) => {
@@ -12,14 +12,14 @@ export const kungalgameResponseMiddleware = (): Middleware => {
       ctx.body = {
         code: 200,
         message: 'OK',
-        data: ctx.body,
+        data: ctx.body
       }
     } catch (error) {
       ctx.status = 500
       ctx.body = {
         code: 500,
         message: ctx.message || 'ERROR',
-        data: {},
+        data: {}
       }
     }
   }

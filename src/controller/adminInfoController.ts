@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import AdminInfoService from '@/service/adminInfoService'
 
 class AdminInfoController {

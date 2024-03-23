@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import UserService from '@/service/userService'
 import AdminInfoService from '@/service/adminInfoService'
 import { setCookieAdminToken, getCookieTokenInfo } from '@/utils/cookies'
@@ -22,7 +22,7 @@ class UserController {
       ctx.app.emit('kunError', 10105, ctx)
       return
     } else {
-      setValue(`loginCD:${name}`, name, 60)
+      await setValue(`loginCD:${name}`, name, 60)
     }
 
     const result = await UserService.loginUser(name, password)
@@ -46,8 +46,8 @@ class UserController {
   }
 
   async updateUserRoles(ctx: Context) {
-    const cookieAdminRoles = getCookieTokenInfo(ctx).roles
-    if (cookieAdminRoles <= 2) {
+    const cookieAdminRoles = getCookieTokenInfo(ctx)?.roles
+    if (!cookieAdminRoles || cookieAdminRoles <= 2) {
       ctx.app.emit('kunError', 10107, ctx)
       return
     }
@@ -60,7 +60,7 @@ class UserController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} set ${adminUser.name} as administrator\nUID: ${uid}`
+      `${user.name} set ${adminUser?.name} as administrator\nUID: ${uid}`
     )
 
     await UserService.updateUserByUid(uid, 'roles', roles)
@@ -74,7 +74,7 @@ class UserController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} banned ${banUser.name}\nUID: ${uid}`
+      `${user.name} banned ${banUser?.name}\nUID: ${uid}`
     )
 
     await delValue(`refreshToken:${uid}`)
@@ -85,21 +85,21 @@ class UserController {
     const uid = ctx.request.body.uid as string
 
     const unbanUser = await UserService.getUserInfoByUid(parseInt(uid), [
-      'name',
+      'name'
     ])
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} unbanned ${unbanUser.name}\nUID: ${uid}`
+      `${user.name} unbanned ${unbanUser?.name}\nUID: ${uid}`
     )
 
     await UserService.updateUserByUid(uid, 'status', 0)
   }
 
   async deleteUserByUid(ctx: Context) {
-    const roles = getCookieTokenInfo(ctx).roles
-    if (roles <= 2) {
+    const roles = getCookieTokenInfo(ctx)?.roles
+    if (!roles || roles <= 2) {
       ctx.app.emit('kunError', 10107, ctx)
       return
     }
@@ -112,7 +112,7 @@ class UserController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'delete',
-      `${user.name} deleted ${deletedUser.name}\nUID: ${uid}\nUser Info: ${userString}`
+      `${user.name} deleted ${deletedUser?.name}\nUID: ${uid}\nUser Info: ${userString}`
     )
 
     await delValue(`refreshToken:${uid}`)

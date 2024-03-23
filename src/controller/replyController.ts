@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import AdminInfoService from '@/service/adminInfoService'
 import ReplyService from '@/service/replyService'
 
@@ -11,7 +11,7 @@ class ReplyController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} updated a reply\nrid: ${rid}\ntid: ${reply.tid}\nOriginal reply: ${reply.content}`
+      `${user.name} updated a reply\nrid: ${rid}\ntid: ${reply?.tid}\nOriginal reply: ${reply?.content}`
     )
 
     await ReplyService.updateReply(tid, rid, content, tags)
@@ -35,7 +35,7 @@ class ReplyController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'delete',
-      `${user.name} deleted a reply\nrid: ${rid}\ntid: ${reply.tid}\nOriginal reply: ${reply.content}`
+      `${user.name} deleted a reply\nrid: ${rid}\ntid: ${reply?.tid}\nOriginal reply: ${reply?.content}`
     )
 
     await ReplyService.deleteReplyByRid(parseInt(rid))

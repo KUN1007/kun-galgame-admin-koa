@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import TopicService from '@/service/topicService'
 import AdminInfoService from '@/service/adminInfoService'
 import { getCookieTokenInfo } from '@/utils/cookies'
@@ -15,11 +15,12 @@ class TopicController {
     }
 
     const topic = await TopicService.getTopicByTid(tid)
+    const topicString = JSON.stringify(topic)
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} updated a topic\ntid: ${topic.tid}\nOriginal topic:\nTitle: ${topic.title}\nContent: ${topic.content}\nTags: ${topic.tags}\nCategory: ${topic.category}\nSection: ${topic.section}`
+      `${user.name} updated a topic\ntid: ${topic?.tid}\nOriginal topic:\n${topicString}`
     )
 
     await TopicService.updateTopicByTid(
@@ -34,7 +35,10 @@ class TopicController {
 
   async getTopicsByContentApi(ctx: Context) {
     const keywords = ctx.query.keywords as string
-    const roles = getCookieTokenInfo(ctx).roles
+    const roles = getCookieTokenInfo(ctx)?.roles
+    if (!roles) {
+      return
+    }
 
     if (!keywords.trim() && roles < 3) {
       ctx.app.emit('kunError', 10601, ctx)
@@ -47,8 +51,8 @@ class TopicController {
   }
 
   async deleteTopicByTid(ctx: Context) {
-    const roles = getCookieTokenInfo(ctx).roles
-    if (roles <= 2) {
+    const roles = getCookieTokenInfo(ctx)?.roles
+    if (!roles || roles <= 2) {
       ctx.app.emit('kunError', 10107, ctx)
       return
     }
@@ -76,13 +80,13 @@ class TopicController {
       await AdminInfoService.createAdminInfo(
         user.uid,
         'update',
-        `${user.name} banned a topic\ntid: ${topic.tid}\nTitle: ${topic.title}\n`
+        `${user.name} banned a topic\ntid: ${topic?.tid}\nTitle: ${topic?.title}\n`
       )
     } else {
       await AdminInfoService.createAdminInfo(
         user.uid,
         'update',
-        `${user.name} unbanned a topic\ntid: ${topic.tid}\nTitle: ${topic.title}\n`
+        `${user.name} unbanned a topic\ntid: ${topic?.tid}\nTitle: ${topic?.title}\n`
       )
     }
 

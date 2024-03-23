@@ -13,7 +13,7 @@ const CommentSchema = new mongoose.Schema<CommentAttributes>(
     content: { type: String, default: '' },
 
     likes_count: { type: Number, default: 0 },
-    likes: { type: [Number], default: [] },
+    likes: { type: [Number], default: [] }
   },
   { timestamps: { createdAt: 'created', updatedAt: 'updated' } }
 )
@@ -21,13 +21,13 @@ const CommentSchema = new mongoose.Schema<CommentAttributes>(
 CommentSchema.virtual('cuid', {
   ref: 'user',
   localField: 'c_uid',
-  foreignField: 'uid',
+  foreignField: 'uid'
 })
 
 CommentSchema.virtual('touid', {
   ref: 'user',
   localField: 'to_uid',
-  foreignField: 'uid',
+  foreignField: 'uid'
 })
 
 CommentSchema.pre('save', increasingSequence('cid'))

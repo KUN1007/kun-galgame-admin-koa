@@ -8,6 +8,9 @@ import commentService from './commentService'
 class ReplyService {
   async getReplyByRid(rid: number) {
     const reply = await ReplyModel.findOne({ rid }).lean()
+    if (!reply) {
+      return
+    }
     const { tid, content } = reply
     return { tid, content }
   }
@@ -16,16 +19,16 @@ class ReplyService {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
-      await ReplyModel.updateOne({ rid: rid }, { tags, content })
+      await ReplyModel.updateOne({ rid }, { tags, content })
 
       await TagService.updateTagsByTidAndRid(tid, rid, tags, [])
 
       await session.commitTransaction()
-      session.endSession()
     } catch (error) {
       await session.abortTransaction()
-      session.endSession()
       throw error
+    } finally {
+      await session.endSession()
     }
   }
 
@@ -45,12 +48,12 @@ class ReplyService {
       r_user: {
         uid: reply.r_user[0].uid,
         name: reply.r_user[0].name,
-        avatar: reply.r_user[0].avatar,
+        avatar: reply.r_user[0].avatar
       },
       to_user: {
         uid: reply.to_user[0].uid,
         name: reply.to_user[0].name,
-        avatar: reply.to_user[0].avatar,
+        avatar: reply.to_user[0].avatar
       },
       edited: reply.edited,
       content: reply.content,
@@ -60,7 +63,7 @@ class ReplyService {
       dislikes: reply.dislikes,
       tags: reply.tags,
       time: reply.time,
-      comment: reply.comment,
+      comment: reply.comment
     }))
 
     return responseData
@@ -68,6 +71,9 @@ class ReplyService {
 
   async deleteReplyByRid(rid: number) {
     const replyInfo = await ReplyModel.findOne({ rid })
+    if (!replyInfo) {
+      return
+    }
 
     const decreaseAmount = replyInfo.likes.length + replyInfo.upvotes.length
     await UserModel.updateOne(
@@ -79,15 +85,15 @@ class ReplyService {
           moemoepoint: -decreaseAmount,
           upvote: -replyInfo.upvotes.length,
           like: -replyInfo.likes.length,
-          dislike: -replyInfo.dislikes.length,
-        },
+          dislike: -replyInfo.dislikes.length
+        }
       }
     )
 
     await UserModel.updateOne(
       { uid: replyInfo.to_uid },
       {
-        $inc: { moemoepoint: -2 },
+        $inc: { moemoepoint: -2 }
       }
     )
 
@@ -97,7 +103,7 @@ class ReplyService {
       { tid: replyInfo.tid },
       {
         $inc: { replies_count: -1, popularity: -5 },
-        $pull: { replies: replyInfo.rid },
+        $pull: { replies: replyInfo.rid }
       }
     )
 
@@ -121,10 +127,10 @@ class ReplyService {
       r_user: {
         uid: reply.r_user[0].uid,
         name: reply.r_user[0].name,
-        avatar: reply.r_user[0].avatar,
+        avatar: reply.r_user[0].avatar
       },
       content: reply.content.slice(0, 233),
-      time: reply.time,
+      time: reply.time
     }))
 
     return data

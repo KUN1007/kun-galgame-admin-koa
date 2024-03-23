@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import TagService from '@/service/tagService'
 
 class TagController {

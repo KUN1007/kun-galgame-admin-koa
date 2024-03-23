@@ -1,4 +1,4 @@
-import { Context } from 'koa'
+import { type Context } from 'koa'
 import { errorMessages } from './kunErrorList'
 
 const defaultErrorMessage = 'Unknown server error'
@@ -10,6 +10,6 @@ export const kungalgameErrorHandler = (code: number, ctx: Context) => {
 
   ctx.body = {
     code,
-    message: errorMessage,
+    message: errorMessage
   }
 }

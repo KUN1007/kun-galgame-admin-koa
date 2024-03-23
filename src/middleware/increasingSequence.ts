@@ -1,4 +1,4 @@
-import { Document } from 'mongoose'
+import { type Document } from 'mongoose'
 
 /**
  * Generic function to generate an increasing sequence for a given model and field.
@@ -11,13 +11,14 @@ type PreSaveMiddleware<T extends Document> = (
   next: (error?: Error) => void
 ) => Promise<void>
 
-function increasingSequence(
+function increasingSequence (
   fieldName: string,
   startSeq = 1
 ): PreSaveMiddleware<any> {
   return async function (next) {
     if (!this.isNew) {
-      return next()
+      next()
+      return
     }
 
     try {
@@ -33,7 +34,7 @@ function increasingSequence(
 
       next()
     } catch (error) {
-      return next(error as Error)
+      next(error as Error)
     }
   }
 }

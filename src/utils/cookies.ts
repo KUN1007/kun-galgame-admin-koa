@@ -1,15 +1,18 @@
-import { Context } from 'koa'
+import type { Context } from 'koa'
 import { verifyJWTPayload } from './jwt'
 
-export function setCookieAdminToken(ctx: Context, token: string) {
+export const setCookieAdminToken = (ctx: Context, token: string) => {
   ctx.cookies.set('kungalgame-admin-token', token, {
     httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000
   })
 }
 
-export function getCookieTokenInfo(ctx: Context) {
+export const getCookieTokenInfo = (ctx: Context) => {
   const refreshToken = ctx.cookies.get('kungalgame-admin-token')
+  if (!refreshToken) {
+    return null
+  }
 
   try {
     const user = verifyJWTPayload(refreshToken)
