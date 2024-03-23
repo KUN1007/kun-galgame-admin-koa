@@ -15,7 +15,7 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "importHelpers": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "allowUnreachableCode": true,
     "lib": ["es2017"],
     "typeRoots": ["node_modules/@types", "./typings"],
@@ -30,7 +30,8 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "config/utils.ts",
-    "src/index.ts"
+    "src/index.ts",
+    ".eslintrc.cjs"
   ],
   "exclude": ["node_modules", "build", "**/*.test.ts", "test/**/*", "temp"],
   "compileOnSave": true,
