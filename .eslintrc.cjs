@@ -26,14 +26,5 @@ module.exports = {
     'no-unused-vars': 'warn',
     'consistent-return': 'error',
     'no-async-promise-executor': 'error',
-    'node/no-unsupported-features/es-syntax': [
-      'error',
-      {
-        version: '>=12.0.0',
-        ignores: [],
-      },
-    ],
-    'node/no-missing-import': 'error',
-    'node/no-missing-require': 'error',
   },
 }
