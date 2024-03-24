@@ -4,13 +4,17 @@ import TopicModel from '@/models/topic'
 import UserModel from '@/models/user'
 
 class CommentService {
-  async getCommentByCid (cid: number) {
+  async getCommentByCid(cid: number) {
     const comment = await CommentModel.findOne({ cid }).lean()
+    if (!comment) {
+      return
+    }
+
     const { tid, content } = comment
     return { tid, content }
   }
 
-  async getComments (content: string) {
+  async getComments(content: string) {
     const regex = new RegExp(content, 'i')
 
     const comment = await CommentModel.find({ content: regex })
@@ -39,12 +43,15 @@ class CommentService {
     return replyComments
   }
 
-  async updateCommentsByCid (cid: number, content: string) {
+  async updateCommentsByCid(cid: number, content: string) {
     await CommentModel.updateOne({ cid }, { content })
   }
 
-  async deleteCommentsByCid (cid: number) {
+  async deleteCommentsByCid(cid: number) {
     const commentInfo = await CommentModel.findOne({ cid }).lean()
+    if (!commentInfo) {
+      return
+    }
 
     await UserModel.updateOne(
       {
@@ -80,7 +87,7 @@ class CommentService {
     await CommentModel.deleteOne({ cid })
   }
 
-  async getNewCommentToday () {
+  async getNewCommentToday() {
     const comments = await CommentModel.find({}, 'tid cid content')
       .populate('cuid', 'uid avatar name')
       .sort({ time: -1 })

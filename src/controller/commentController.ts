@@ -21,7 +21,7 @@ class CommentController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} updated a comment\ncid: ${cid}\ntid: ${comment.tid}\nOriginal comment: ${comment.content}`
+      `${user.name} updated a comment\ncid: ${cid}\ntid: ${comment?.tid}\nOriginal comment: ${comment?.content}`
     )
 
     await CommentService.updateCommentsByCid(cid, content)
@@ -35,7 +35,7 @@ class CommentController {
     await AdminInfoService.createAdminInfo(
       user.uid,
       'delete',
-      `${user.name} deleted a comment\ncid: ${cid}\ntid: ${comment.tid}\nOriginal comment: ${comment.content}`
+      `${user.name} deleted a comment\ncid: ${cid}\ntid: ${comment?.tid}\nOriginal comment: ${comment?.content}`
     )
 
     await CommentService.deleteCommentsByCid(parseInt(cid))
