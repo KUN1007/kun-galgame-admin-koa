@@ -7,7 +7,7 @@ import mongoose from '@/db/connection'
 type ModelName = 'topic' | 'reply' | 'comment' | 'user'
 
 class OverviewService {
-  async getSumData () {
+  async getSumData() {
     const topicCount = await TopicModel.countDocuments().lean()
     const replyCount = await ReplyModel.countDocuments().lean()
     const commentCount = await CommentModel.countDocuments().lean()
@@ -15,7 +15,7 @@ class OverviewService {
     return { topicCount, replyCount, commentCount, userCount }
   }
 
-  async getOverviewData (days: number) {
+  async getOverviewData(days: number) {
     const time = new Date()
     time.setDate(time.getDate() - days)
 
@@ -35,7 +35,7 @@ class OverviewService {
     return { newTopics, newReplies, newComments, newUsers }
   }
 
-  async getLineChartData (days: number, model: ModelName) {
+  async getLineChartData(days: number, model: ModelName) {
     const mongooseModel = mongoose.model(model)
 
     const today = new Date()

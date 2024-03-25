@@ -11,7 +11,7 @@ type PreSaveMiddleware<T extends Document> = (
   next: (error?: Error) => void
 ) => Promise<void>
 
-function increasingSequence (
+function increasingSequence(
   fieldName: string,
   startSeq = 1
 ): PreSaveMiddleware<any> {

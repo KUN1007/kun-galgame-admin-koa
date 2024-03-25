@@ -3,7 +3,7 @@ import AdminInfoModel from '@/models/adminInfo'
 type AdminInfo = 'get' | 'post' | 'update' | 'delete' | 'global'
 
 class AdminInfoService {
-  async createAdminInfo (uid: number, type: AdminInfo, content: string) {
+  async createAdminInfo(uid: number, type: AdminInfo, content: string) {
     const newAdminInfo = new AdminInfoModel({
       uid,
       type,
@@ -14,7 +14,7 @@ class AdminInfoService {
     await newAdminInfo.save()
   }
 
-  async getAdminInfo (page: number, limit: number) {
+  async getAdminInfo(page: number, limit: number) {
     const skip = (page - 1) * limit
 
     const adminInfos = await AdminInfoModel.find()

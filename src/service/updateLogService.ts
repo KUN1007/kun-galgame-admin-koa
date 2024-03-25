@@ -1,7 +1,7 @@
 import UpdateLogModel from '@/models/updateLog'
 
 class UpdateLogService {
-  async createUpdateLog (
+  async createUpdateLog(
     type: string,
     contentEn: string,
     contentZh: string,
@@ -18,7 +18,7 @@ class UpdateLogService {
     await newUpdateLog.save()
   }
 
-  async getUpdateLogs (page: number, limit: number) {
+  async getUpdateLogs(page: number, limit: number) {
     const skip = (page - 1) * limit
 
     const updateLogs = await UpdateLogModel.find()
@@ -37,7 +37,7 @@ class UpdateLogService {
     return data
   }
 
-  async updateUpdateLog (
+  async updateUpdateLog(
     upid: number,
     contentEn: string,
     contentZh: string,
@@ -49,7 +49,7 @@ class UpdateLogService {
     )
   }
 
-  async deleteUpdateLog (id: number) {
+  async deleteUpdateLog(id: number) {
     const deletedUpdateLog = await UpdateLogModel.findByIdAndDelete(id)
     return deletedUpdateLog
   }

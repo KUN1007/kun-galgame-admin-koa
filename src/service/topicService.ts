@@ -7,7 +7,7 @@ import UserModel from '@/models/user'
 import ReplyService from './replyService'
 
 class TopicService {
-  async updateTopicByTid (
+  async updateTopicByTid(
     tid: number,
     title: string,
     content: string,
@@ -18,7 +18,10 @@ class TopicService {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
-      await TopicModel.updateOne({ tid }, { title, content, tags, category, section })
+      await TopicModel.updateOne(
+        { tid },
+        { title, content, tags, category, section }
+      )
 
       await TagService.updateTagsByTidAndRid(tid, 0, tags, category)
 
@@ -31,7 +34,7 @@ class TopicService {
     }
   }
 
-  async getTopicByTid (tid: number) {
+  async getTopicByTid(tid: number) {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
@@ -40,7 +43,10 @@ class TopicService {
         return
       }
 
-      await TopicModel.updateOne({ tid }, { $inc: { views: 1, popularity: 0.1 } })
+      await TopicModel.updateOne(
+        { tid },
+        { $inc: { views: 1, popularity: 0.1 } }
+      )
 
       const userInfo = await UserService.getUserInfoByUid(topic.uid, [
         'uid',
@@ -88,8 +94,10 @@ class TopicService {
     }
   }
 
-  async getTopicsByContentApi (keywords: string) {
-    const keywordsArray: string[] = keywords.split(' ').filter((keyword) => keyword.trim() !== '')
+  async getTopicsByContentApi(keywords: string) {
+    const keywordsArray: string[] = keywords
+      .split(' ')
+      .filter((keyword) => keyword.trim() !== '')
 
     const escapedKeywords = keywordsArray.map((keyword) =>
       keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -104,7 +112,9 @@ class TopicService {
       ]
     }
 
-    const topics = await TopicModel.find(searchQuery).populate('user', 'uid avatar name').lean()
+    const topics = await TopicModel.find(searchQuery)
+      .populate('user', 'uid avatar name')
+      .lean()
 
     const data = topics.map((topic) => ({
       tid: topic.tid,
@@ -130,7 +140,7 @@ class TopicService {
     return data
   }
 
-  async deleteTopicByTid (tid: number) {
+  async deleteTopicByTid(tid: number) {
     const topic = await TopicModel.findOne({ tid }).lean()
     if (!topic) {
       return
@@ -176,11 +186,11 @@ class TopicService {
     await TopicModel.deleteOne({ tid })
   }
 
-  async updateTopicStatus (tid: number, status: number) {
+  async updateTopicStatus(tid: number, status: number) {
     await TopicModel.updateOne({ tid }, { status })
   }
 
-  async getNewTopicToday () {
+  async getNewTopicToday() {
     const topics = await TopicModel.find({}, 'tid title time popularity')
       .populate('user', 'uid avatar name')
       .sort({ time: -1 })

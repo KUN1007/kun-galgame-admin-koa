@@ -2,9 +2,16 @@ import TagModel from '@/models/tag'
 import mongoose from '@/db/connection'
 
 class TagService {
-  async createTagsByTidAndRid (tid: number, rid: number, tagNames: string[], category: string[]) {
+  async createTagsByTidAndRid(
+    tid: number,
+    rid: number,
+    tagNames: string[],
+    category: string[]
+  ) {
     try {
-      const tagsArray = Array.isArray(tagNames) ? tagNames : JSON.parse(tagNames)
+      const tagsArray = Array.isArray(tagNames)
+        ? tagNames
+        : JSON.parse(tagNames)
       const uniqueTagNames = [...new Set(tagsArray)]
       const createdTags = []
 
@@ -21,7 +28,12 @@ class TagService {
     }
   }
 
-  async updateTagsByTidAndRid (tid: number, rid: number, tags: string[], category: string[]) {
+  async updateTagsByTidAndRid(
+    tid: number,
+    rid: number,
+    tags: string[],
+    category: string[]
+  ) {
     const session = await mongoose.startSession()
     session.startTransaction()
     try {
@@ -30,9 +42,13 @@ class TagService {
       const existingTags = await TagModel.find({ tid, rid })
       const existingTagNames = existingTags.map((tag) => tag.name)
 
-      const tagsToAdd = tagsArray.filter((tag) => !existingTagNames.includes(tag))
+      const tagsToAdd = tagsArray.filter(
+        (tag) => !existingTagNames.includes(tag)
+      )
 
-      const tagsToRemove = existingTagNames.filter((tag) => !tagsArray.includes(tag))
+      const tagsToRemove = existingTagNames.filter(
+        (tag) => !tagsArray.includes(tag)
+      )
 
       await this.createTagsByTidAndRid(tid, rid, tagsToAdd, category)
 
@@ -49,11 +65,11 @@ class TagService {
     }
   }
 
-  async deleteTagsByTidAndRid (tid: number, rid: number) {
+  async deleteTagsByTidAndRid(tid: number, rid: number) {
     await TagModel.deleteMany({ tid, rid })
   }
 
-  async getTopTags (limit: number) {
+  async getTopTags(limit: number) {
     const topTags = await TagModel.aggregate([
       { $group: { _id: '$name', count: { $sum: 1 } } },
       { $sort: { count: -1 } },

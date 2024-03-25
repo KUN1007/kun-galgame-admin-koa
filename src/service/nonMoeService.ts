@@ -3,7 +3,7 @@ import NonMoeModel from '@/models/nonMoe'
 type SortOrder = 'asc' | 'desc'
 
 class NonMoeService {
-  async createNonMoeLog (
+  async createNonMoeLog(
     uid: number,
     name: string,
     description: string,
@@ -21,7 +21,7 @@ class NonMoeService {
     await newIncome.save()
   }
 
-  async getNonMoeLogs (page: number, limit: number, sortOrder: SortOrder) {
+  async getNonMoeLogs(page: number, limit: number, sortOrder: SortOrder) {
     const skip = (page - 1) * limit
 
     const nonMoeLogs = await NonMoeModel.find()
