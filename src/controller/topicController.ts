@@ -1,6 +1,7 @@
 import { type Context } from 'koa'
 import TopicService from '@/service/topicService'
 import AdminInfoService from '@/service/adminInfoService'
+import { delValue } from '@/config/redisConfig'
 import { getCookieTokenInfo } from '@/utils/cookies'
 import { checkTopicPublish } from './utils/checkTopicPublish'
 
@@ -74,20 +75,23 @@ class TopicController {
   async updateTopicStatus(ctx: Context) {
     const { tid, status } = ctx.request.body
 
+    const statusMap: Record<number, string> = {
+      0: 'set normal',
+      1: 'set banned',
+      2: 'set pinned',
+      3: 'set essential'
+    }
+
     const topic = await TopicService.getTopicByTid(tid)
     const user = ctx.state.user
-    if (status) {
-      await AdminInfoService.createAdminInfo(
-        user.uid,
-        'update',
-        `${user.name} banned a topic\ntid: ${topic?.tid}\nTitle: ${topic?.title}\n`
-      )
-    } else {
-      await AdminInfoService.createAdminInfo(
-        user.uid,
-        'update',
-        `${user.name} unbanned a topic\ntid: ${topic?.tid}\nTitle: ${topic?.title}\n`
-      )
+    await AdminInfoService.createAdminInfo(
+      user.uid,
+      'update',
+      `${user.name} ${statusMap[parseInt(status)]} a topic\ntid: ${topic?.tid}\nTitle: ${topic?.title}\n`
+    )
+
+    if (status === 2) {
+      await delValue('home:pinned')
     }
 
     await TopicService.updateTopicStatus(parseInt(tid), parseInt(status))
