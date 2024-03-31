@@ -1,19 +1,19 @@
 import NonMoeModel from '@/models/nonMoe'
 
-type SortOrder = 'asc' | 'desc'
-
 class NonMoeService {
   async createNonMoeLog(
     uid: number,
     name: string,
-    description: string,
+    description_en_us: string,
+    description_zh_cn: string,
     time: number,
     result: string
   ) {
     const newIncome = new NonMoeModel({
       uid,
       name,
-      description,
+      description_en_us,
+      description_zh_cn,
       time,
       result
     })
@@ -21,25 +21,20 @@ class NonMoeService {
     await newIncome.save()
   }
 
-  async getNonMoeLogs(page: number, limit: number, sortOrder: SortOrder) {
-    const skip = (page - 1) * limit
+  async getNonMoeLogs(uid?: number) {
+    const result = uid
+      ? await NonMoeModel.find({ uid }).lean().sort({ nid: -1 })
+      : await NonMoeModel.find().lean().sort({ nid: -1 })
 
-    const nonMoeLogs = await NonMoeModel.find()
-      .sort(sortOrder)
-      .skip(skip)
-      .limit(limit)
-      .lean()
+    return result
+  }
 
-    const responseData = nonMoeLogs.map((log) => ({
-      nid: log.nid,
-      uid: log.uid,
-      name: log.name,
-      description: log.description,
-      time: log.time,
-      result: log.result
-    }))
+  async updateNonMoeLog(nid: number, result: any) {
+    await NonMoeModel.updateOne({ nid }, result)
+  }
 
-    return responseData
+  async withdrawNonMoeLog(nid: number) {
+    await NonMoeModel.deleteOne({ nid })
   }
 }
 

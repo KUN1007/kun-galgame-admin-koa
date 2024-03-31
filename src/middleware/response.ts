@@ -9,10 +9,11 @@ export const kungalgameResponseMiddleware = (): Middleware => {
         return
       }
 
+      ctx.status = 200
       ctx.body = {
+        data: ctx.body,
         code: 200,
-        message: 'OK',
-        data: ctx.body
+        message: 'OK'
       }
     } catch (error) {
       ctx.status = 500

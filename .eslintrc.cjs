@@ -27,6 +27,7 @@ module.exports = {
     '@typescript-eslint/no-unused-expressions': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/space-before-function-paren': 'off',
+    '@typescript-eslint/naming-convention': 'off',
     // Unsafe TODO:
     '@typescript-eslint/no-unsafe-argument': 'off',
     'no-unused-vars': 'off',
