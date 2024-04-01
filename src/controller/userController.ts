@@ -38,11 +38,15 @@ class UserController {
 
   async getUserByUsername(ctx: Context) {
     const name = ctx.query.name as string
+    const exactly = ctx.query.exactly as string
     if (!name.trim()) {
       ctx.app.emit('kunError', 10601, ctx)
       return
     }
-    ctx.body = await UserService.getUserByUsername(name)
+    ctx.body =
+      exactly === '1'
+        ? await UserService.getUserByUsernameExactly(name)
+        : await UserService.getUserByUsername(name)
   }
 
   async updateUserRoles(ctx: Context) {

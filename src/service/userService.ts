@@ -13,8 +13,9 @@ import type { LoginResponseData } from './types/userService'
 class UserService {
   async getUserByUid(uid: number, roles: number) {
     const user = await UserModel.findOne({ uid }).lean()
+
     if (!user) {
-      return
+      return null
     }
 
     const { password, email, ip, ...rest } = user
@@ -34,6 +35,22 @@ class UserService {
       time: user.time,
       status: user.status
     }))
+    return responseData
+  }
+
+  async getUserByUsernameExactly(name: string) {
+    const user = await UserModel.findOne({ name }).lean()
+    if (!user) {
+      return null
+    }
+    const responseData = {
+      uid: user.uid,
+      name: user.name,
+      avatar: user.avatar,
+      bio: user.bio,
+      time: user.time,
+      status: user.status
+    }
     return responseData
   }
 

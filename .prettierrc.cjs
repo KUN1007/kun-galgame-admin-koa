@@ -13,5 +13,5 @@ module.exports = {
   insertPragma: false,
   endOfLine: 'auto',
   embeddedLanguageFormatting: 'auto',
-  trailingComma: 'none',
+  trailingComma: 'none'
 }
