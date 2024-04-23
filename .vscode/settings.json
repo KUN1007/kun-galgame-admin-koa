@@ -6,9 +6,14 @@
     "cooldown",
     "galgame",
     "galgamer",
+    "gcid",
+    "ghid",
+    "glid",
+    "gprid",
     "hgetall",
     "kungalgame",
     "loli",
+    "maxlength",
     "moemoe",
     "moemoepoint",
     "moemoepoints",
@@ -22,6 +27,7 @@
     "upid",
     "upvotes",
     "utid",
-    "visualnovel"
+    "visualnovel",
+    "vndb"
   ]
 }

@@ -1,13 +1,12 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
-
 import type { TopicAttributes } from './types/topic'
 
 const TopicSchema = new mongoose.Schema<TopicAttributes>(
   {
     tid: { type: Number, unique: true },
-    title: { type: String, required: true },
-    content: { type: String, required: true },
+    title: { type: String, required: true, maxlength: 40 },
+    content: { type: String, required: true, maxlength: 100007 },
     uid: { type: Number, required: true, ref: 'user' },
     tags: { type: [String], required: true },
     category: { type: [String], required: true },
@@ -19,13 +18,6 @@ const TopicSchema = new mongoose.Schema<TopicAttributes>(
     comments: { type: Number, default: 0 },
     upvote_time: { type: Number, default: 0 },
 
-    upvotes_count: { type: Number, default: 0 },
-    replies_count: { type: Number, default: 0 },
-    likes_count: { type: Number, default: 0 },
-    share_count: { type: Number, default: 0 },
-    dislikes_count: { type: Number, default: 0 },
-    favorites_count: { type: Number, default: 0 },
-
     upvotes: { type: [Number], default: [] },
     replies: { type: [Number], default: [] },
     likes: { type: [Number], default: [] },
@@ -33,6 +25,7 @@ const TopicSchema = new mongoose.Schema<TopicAttributes>(
     dislikes: { type: [Number], default: [] },
     favorites: { type: [Number], default: [] },
 
+    // 0 - normal, 1 - banned, 2 - pinned, 3 - essential
     status: { type: Number, default: 0 },
     edited: { type: Number, default: 0 }
   },

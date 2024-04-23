@@ -3,17 +3,9 @@ import NonMoeService from '@/service/nonMoeService'
 
 class NonMoeController {
   async createNonMoeLog(ctx: Context) {
-    const { uid, name, description_en_us, description_zh_cn, time, result } =
-      ctx.request.body
+    const { uid, name, description, time, result } = ctx.request.body
 
-    await NonMoeService.createNonMoeLog(
-      uid,
-      name,
-      description_en_us,
-      description_zh_cn,
-      time,
-      result
-    )
+    await NonMoeService.createNonMoeLog(uid, name, description, time, result)
   }
 
   async getNonMoeLogsByUid(ctx: Context): Promise<void> {
@@ -28,9 +20,6 @@ class NonMoeController {
   async updateNonMoeLog(ctx: Context) {
     const { nid } = ctx.params
     const result = ctx.request.body
-
-    console.log(nid, result)
-
     await NonMoeService.updateNonMoeLog(parseInt(nid), result)
   }
 

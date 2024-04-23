@@ -1,6 +1,5 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
-
 import type { AdminInfoAttributes } from './types/adminInfo'
 
 const AdminInfoSchema = new mongoose.Schema<AdminInfoAttributes>(

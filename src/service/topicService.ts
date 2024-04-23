@@ -131,7 +131,7 @@ class TopicService {
       time: topic.time,
       views: topic.views,
       comments: topic.comments,
-      replies: topic.replies_count,
+      replies: topic.replies.length,
 
       edited: topic.edited,
       status: topic.status

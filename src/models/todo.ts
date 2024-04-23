@@ -1,14 +1,16 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
-
 import type { TodoAttributes } from './types/todo'
 
 const TodoSchema = new mongoose.Schema<TodoAttributes>(
   {
     todo_id: { type: Number, unique: true },
     status: { type: Number, default: 0 },
-    content_en_us: { type: String, require: true },
-    content_zh_cn: { type: String, require: true },
+    content: {
+      'en-us': { type: String, default: '' },
+      'ja-jp': { type: String, default: '' },
+      'zh-cn': { type: String, default: '' }
+    },
     creator_uid: { type: Number, require: true, ref: 'user' },
     time: { type: Number, default: Date.now() },
     completer_uid: { type: Number, default: 2, ref: 'user' },

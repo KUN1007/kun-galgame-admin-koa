@@ -1,9 +1,8 @@
 import type { UserAttributes } from './user'
 
-export interface CommentAttributes {
-  cid: number
-  rid: number
-  tid: number
+export interface GalgameComment {
+  gcid: number
+  gid: number
   c_uid: number
   to_uid: number
   content: string
@@ -11,7 +10,7 @@ export interface CommentAttributes {
   likes: number[]
 
   cuid: UserAttributes[]
-  touid: UserAttributes[]
+  touid?: UserAttributes[]
 
   created: Date
   updated: Date

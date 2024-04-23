@@ -9,6 +9,7 @@ const resetDailyTask = schedule.scheduleJob('0 0 * * *', async () => {
       {
         $set: {
           daily_topic_count: 0,
+          daily_galgame_count: 0,
           daily_image_count: 0,
           daily_check_in: 0
         }

@@ -1,6 +1,5 @@
 import mongoose from '@/db/connection'
 import increasingSequence from '@/middleware/increasingSequence'
-
 import type { CommentAttributes } from './types/comment'
 
 const CommentSchema = new mongoose.Schema<CommentAttributes>(
@@ -10,9 +9,8 @@ const CommentSchema = new mongoose.Schema<CommentAttributes>(
     tid: { type: Number, required: true },
     c_uid: { type: Number, required: true, ref: 'user' },
     to_uid: { type: Number, required: true, ref: 'user' },
-    content: { type: String, default: '' },
+    content: { type: String, default: '', maxlength: 1007 },
 
-    likes_count: { type: Number, default: 0 },
     likes: { type: [Number], default: [] }
   },
   { timestamps: { createdAt: 'created', updatedAt: 'updated' } }

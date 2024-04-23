@@ -4,21 +4,17 @@ class NonMoeService {
   async createNonMoeLog(
     uid: number,
     name: string,
-    description_en_us: string,
-    description_zh_cn: string,
+    description: KunLanguage,
     time: number,
     result: string
   ) {
-    const newIncome = new NonMoeModel({
+    await NonMoeModel.create({
       uid,
       name,
-      description_en_us,
-      description_zh_cn,
+      description,
       time,
       result
     })
-
-    await newIncome.save()
   }
 
   async getNonMoeLogs(uid?: number) {

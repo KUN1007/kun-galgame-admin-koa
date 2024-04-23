@@ -5,20 +5,13 @@ class TodoService {
     return await TodoModel.findOne({ todo_id: todoId })
   }
 
-  async createTodo(
-    creatorUid: number,
-    contentEn: string,
-    contentZh: string,
-    status: number
-  ) {
-    const newTodo = new TodoModel({
+  async createTodo(creatorUid: number, content: KunLanguage, status: number) {
+    await TodoModel.create({
       creator_uid: creatorUid,
-      content_en_us: contentEn,
-      content_zh_cn: contentZh,
+      content,
       status,
       time: Date.now()
     })
-    await newTodo.save()
   }
 
   async getTodos(page: number, limit: number) {
@@ -35,8 +28,7 @@ class TodoService {
     const data = todos.map((todo) => ({
       todoId: todo.todo_id,
       status: todo.status,
-      contentEn: todo.content_en_us,
-      contentZh: todo.content_zh_cn,
+      content: todo.content,
       creator: {
         uid: todo.creator[0].uid,
         avatar: todo.creator[0].avatar,
@@ -56,8 +48,7 @@ class TodoService {
 
   async updateTodo(
     todoId: number,
-    contentEn: string,
-    contentZh: string,
+    content: KunLanguage,
     status: number,
     completerUid: number
   ) {
@@ -67,8 +58,7 @@ class TodoService {
       { todo_id: todoId },
       {
         completer_uid: completerUid,
-        content_en_us: contentEn,
-        content_zh_cn: contentZh,
+        content,
         status,
         completed_time: time
       }

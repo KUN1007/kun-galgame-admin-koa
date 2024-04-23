@@ -4,16 +4,16 @@ import AdminInfoService from '@/service/adminInfoService'
 
 class TodoController {
   async createTodo(ctx: Context) {
-    const { contentEn, contentZh, status } = ctx.request.body
+    const { content, status } = ctx.request.body
 
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
       'post',
-      `${user.name} created a todo\nContent: ${contentEn}`
+      `${user.name} created a todo\nContent: ${content['en-us']}`
     )
 
-    await TodoService.createTodo(user.uid, contentEn, contentZh, status)
+    await TodoService.createTodo(user.uid, content, status)
   }
 
   async getTodos(ctx: Context) {
@@ -24,17 +24,17 @@ class TodoController {
   }
 
   async updateTodo(ctx: Context) {
-    const { todoId, contentEn, contentZh, status } = ctx.request.body
+    const { todoId, content, status } = ctx.request.body
 
     const todo = await TodoService.getTodoByTodoId(todoId)
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
       user.uid,
       'update',
-      `${user.name} updated a todo\nTodo ID: ${todo?.todo_id}\nOriginal todo content: ${todo?.content_en_us}\nOriginal todo status: ${todo?.status}`
+      `${user.name} updated a todo\nTodo ID: ${todo?.todo_id}\nOriginal todo content: ${todo?.content['en-us']}\nOriginal todo status: ${todo?.status}`
     )
 
-    await TodoService.updateTodo(todoId, contentEn, contentZh, status, user.uid)
+    await TodoService.updateTodo(todoId, content, status, user.uid)
   }
 
   async deleteTodo(ctx: Context) {

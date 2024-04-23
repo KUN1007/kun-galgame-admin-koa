@@ -3,15 +3,13 @@ import UpdateLogModel from '@/models/updateLog'
 class UpdateLogService {
   async createUpdateLog(
     type: string,
-    contentEn: string,
-    contentZh: string,
+    content: KunLanguage,
     time: string,
     version: string
   ) {
     const newUpdateLog = new UpdateLogModel({
       type,
-      content_en_us: contentEn,
-      content_zh_cn: contentZh,
+      content,
       time,
       version
     })
@@ -28,8 +26,7 @@ class UpdateLogService {
 
     const data = updateLogs.map((log) => ({
       upid: log.upid,
-      contentEn: log.content_en_us,
-      contentZh: log.content_zh_cn,
+      content: log.content,
       time: log.time,
       version: log.version
     }))
@@ -45,7 +42,13 @@ class UpdateLogService {
   ) {
     await UpdateLogModel.updateOne(
       { upid },
-      { content_en_us: contentEn, content_zh_cn: contentZh, version }
+      {
+        content: {
+          'en-us': contentEn,
+          'zh-cn': contentZh
+        },
+        version
+      }
     )
   }
 

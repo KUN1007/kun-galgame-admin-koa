@@ -13,9 +13,6 @@ export interface ReplyAttributes {
   content: string
   upvote_time: number
 
-  likes_count: number
-  comments_count: number
-
   upvotes: number[]
   likes: number[]
   dislikes: number[]
@@ -24,4 +21,7 @@ export interface ReplyAttributes {
 
   r_user: UserAttributes[]
   to_user: UserAttributes[]
+
+  created: Date
+  updated: Date
 }

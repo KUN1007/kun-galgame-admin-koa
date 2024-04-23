@@ -4,14 +4,8 @@ import AdminInfoService from '@/service/adminInfoService'
 
 class UpdateLogController {
   async createUpdateLog(ctx: Context) {
-    const { type, contentEn, contentZh, time, version } = ctx.request.body
-    await UpdateLogService.createUpdateLog(
-      type,
-      contentEn,
-      contentZh,
-      time,
-      version
-    )
+    const { type, content, time, version } = ctx.request.body
+    await UpdateLogService.createUpdateLog(type, content, time, version)
 
     const user = ctx.state.user
     await AdminInfoService.createAdminInfo(
