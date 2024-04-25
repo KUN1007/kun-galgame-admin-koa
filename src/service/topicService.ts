@@ -1,9 +1,9 @@
+import mongoose from '@/db/connection'
+import UserModel from '@/models/user'
 import TopicModel from '@/models/topic'
+
 import TagService from './tagService'
 import UserService from './userService'
-import mongoose from '@/db/connection'
-
-import UserModel from '@/models/user'
 import ReplyService from './replyService'
 
 class TopicService {
