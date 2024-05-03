@@ -90,9 +90,7 @@ class TopicController {
       `${user.name} ${statusMap[parseInt(status)]} a topic\ntid: ${topic?.tid}\nTitle: ${topic?.title}\n`
     )
 
-    if (status === 2) {
-      await delValue('home:pinned')
-    }
+    await delValue('home:pinned')
 
     await TopicService.updateTopicStatus(parseInt(tid), parseInt(status))
   }
