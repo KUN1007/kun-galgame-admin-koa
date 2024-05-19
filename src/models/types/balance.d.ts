@@ -1,3 +1,5 @@
+import { TimeLike } from "fs"
+
 export interface Balance {
   bid: number
   reason: KunLanguage
@@ -8,4 +10,14 @@ export interface Balance {
 
   created: Date
   updated: Date
+}
+
+export interface SearchBalance {
+  type: number
+  start: number
+  end: number
+  min: number
+  max: number
+  limit: number
+  page: number
 }
