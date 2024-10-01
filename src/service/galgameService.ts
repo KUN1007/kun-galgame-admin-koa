@@ -101,6 +101,7 @@ class GalgameService {
       return resource
     } catch (error) {
       await session.abortTransaction()
+      throw error
     } finally {
       await session.endSession()
     }
@@ -137,6 +138,7 @@ class GalgameService {
       return comment
     } catch (error) {
       await session.abortTransaction()
+      throw error
     } finally {
       await session.endSession()
     }

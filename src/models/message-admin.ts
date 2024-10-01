@@ -24,7 +24,7 @@ MessageAdminSchema.virtual('user', {
   foreignField: 'uid'
 })
 
-MessageAdminSchema.pre('save', increasingSequence('mid'))
+MessageAdminSchema.pre('save', increasingSequence('maid'))
 
 const MessageAdminModel = mongoose.model<MessageAttributes>(
   'message_admin',

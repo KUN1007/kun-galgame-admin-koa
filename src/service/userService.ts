@@ -18,7 +18,7 @@ class UserService {
       return null
     }
 
-    const { password, email, ip, ...rest } = user
+    const { email, ip, ...rest } = user
     const modifiedRest = roles > 2 ? { email, ip, ...rest } : rest
 
     return modifiedRest

@@ -1,16 +1,15 @@
 import MessageAdminModel from '@/models/message-admin'
 
 class MessageAdminService {
-  async createMessageAdmin(uid: number, type: string, content: KunLanguage) {
+  async createMessageAdmin(uid: number, content: KunLanguage) {
     await MessageAdminModel.create({
       uid,
       time: Date.now(),
-      type,
       content
     })
   }
 
-  async getMessageAdmin(page: number, limit: number) {
+  async getMessageAdmins(page: number, limit: number) {
     const skip = (page - 1) * limit
 
     const messageAdmin = await MessageAdminModel.find()
@@ -29,7 +28,7 @@ class MessageAdminService {
   }
 
   async deleteMessageAdmin(maid: number) {
-    const messageAdmin = await MessageAdminModel.findByIdAndDelete(maid)
+    const messageAdmin = await MessageAdminModel.findOneAndDelete({ maid })
     return messageAdmin
   }
 }

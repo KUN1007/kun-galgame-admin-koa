@@ -52,8 +52,8 @@ class UpdateLogService {
     )
   }
 
-  async deleteUpdateLog(id: number) {
-    const deletedUpdateLog = await UpdateLogModel.findByIdAndDelete(id)
+  async deleteUpdateLog(upid: number) {
+    const deletedUpdateLog = await UpdateLogModel.findOneAndDelete({ upid })
     return deletedUpdateLog
   }
 }

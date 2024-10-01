@@ -1,16 +1,16 @@
 import balanceController from '@/controller/balanceController'
 import Router from 'koa-router'
 
-const router = new Router();
+const router = new Router()
 
-router.prefix('/api/balance');
+router.prefix('/api/balance')
 
-router.post('/', balanceController.CreateBalance);
+router.post('/', balanceController.CreateBalance)
 
-router.get('/', balanceController.GetBalance);
+router.get('/', balanceController.GetBalance)
 
-router.del('/:bid', balanceController.DeleteBalance);
+router.del('/:bid', balanceController.DeleteBalance)
 
-router.put('/:bid', balanceController.UpdateBalance);
+router.put('/:bid', balanceController.UpdateBalance)
 
-export default router;
+export default router

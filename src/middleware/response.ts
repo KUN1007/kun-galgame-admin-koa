@@ -22,6 +22,7 @@ export const kungalgameResponseMiddleware = (): Middleware => {
         message: ctx.message || 'ERROR',
         data: {}
       }
+      throw error
     }
   }
 }
