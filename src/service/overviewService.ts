@@ -7,11 +7,16 @@ import mongoose from '@/db/connection'
 type ModelName = 'topic' | 'reply' | 'comment' | 'user'
 
 class OverviewService {
+  async getCountData(models: any[]) {
+    const counts = await Promise.all(
+      models.map((model) => model.countDocuments())
+    )
+    return counts
+  }
+
   async getSumData() {
-    const topicCount = await TopicModel.countDocuments().lean()
-    const replyCount = await ReplyModel.countDocuments().lean()
-    const commentCount = await CommentModel.countDocuments().lean()
-    const userCount = await UserModel.countDocuments().lean()
+    const [topicCount, replyCount, commentCount, userCount] =
+      await this.getCountData([TopicModel, ReplyModel, CommentModel, UserModel])
     return { topicCount, replyCount, commentCount, userCount }
   }
 
@@ -19,18 +24,14 @@ class OverviewService {
     const time = new Date()
     time.setDate(time.getDate() - days)
 
-    const newTopics = await TopicModel.countDocuments({
-      created: { $gte: time }
-    }).lean()
-    const newReplies = await ReplyModel.countDocuments({
-      created: { $gte: time }
-    }).lean()
-    const newComments = await CommentModel.countDocuments({
-      created: { $gte: time }
-    }).lean()
-    const newUsers = await UserModel.countDocuments({
-      created: { $gte: time }
-    }).lean()
+    const conditions = { created: { $gte: time } }
+
+    const [newTopics, newReplies, newComments, newUsers] = await Promise.all([
+      TopicModel.countDocuments(conditions),
+      ReplyModel.countDocuments(conditions),
+      CommentModel.countDocuments(conditions),
+      UserModel.countDocuments(conditions)
+    ])
 
     return { newTopics, newReplies, newComments, newUsers }
   }
