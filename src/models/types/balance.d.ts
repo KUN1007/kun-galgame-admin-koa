@@ -1,5 +1,3 @@
-import { TimeLike } from "fs"
-
 export interface Balance {
   bid: number
   reason: KunLanguage

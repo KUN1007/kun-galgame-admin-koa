@@ -9,7 +9,8 @@ const TodoSchema = new mongoose.Schema<TodoAttributes>(
     content: {
       'en-us': { type: String, default: '' },
       'ja-jp': { type: String, default: '' },
-      'zh-cn': { type: String, default: '' }
+      'zh-cn': { type: String, default: '' },
+      'zh-tw': { type: String, default: '' }
     },
     creator_uid: { type: Number, require: true, ref: 'user' },
     time: { type: Number, default: Date.now() },
