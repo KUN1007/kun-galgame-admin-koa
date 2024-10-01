@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import increasingSequence from '@/middleware/increasingSequence'
-import type { MessageAttributes } from './types/message'
+import type { MessageAttributes } from './types/message-admin'
 
 const MessageAdminSchema = new mongoose.Schema<MessageAttributes>(
   {
