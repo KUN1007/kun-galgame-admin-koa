@@ -1,7 +1,6 @@
 export type SortField =
   | 'updated'
   | 'time'
-  | 'popularity'
   | 'views'
   | 'upvotes_count'
   | 'likes_count'
@@ -11,7 +10,6 @@ export type SortField =
 export type SortOrder = 'asc' | 'desc'
 
 export type SortFieldRanking =
-  | 'popularity'
   | 'views'
   | 'upvotes_count'
   | 'likes_count'

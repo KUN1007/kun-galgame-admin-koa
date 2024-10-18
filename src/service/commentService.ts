@@ -76,7 +76,7 @@ class CommentService {
 
     await TopicModel.updateOne(
       { tid: commentInfo.tid },
-      { $inc: { popularity: -2, comments: -1 } }
+      { $inc: { comments: -1 } }
     )
 
     await ReplyModel.updateOne(

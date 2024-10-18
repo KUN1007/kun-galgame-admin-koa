@@ -102,7 +102,7 @@ class ReplyService {
     await TopicModel.updateOne(
       { tid: replyInfo.tid },
       {
-        $inc: { replies_count: -1, popularity: -5 },
+        $inc: { replies_count: -1 },
         $pull: { replies: replyInfo.rid }
       }
     )

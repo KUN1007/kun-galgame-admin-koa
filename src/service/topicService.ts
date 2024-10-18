@@ -43,10 +43,7 @@ class TopicService {
         return
       }
 
-      await TopicModel.updateOne(
-        { tid },
-        { $inc: { views: 1, popularity: 0.1 } }
-      )
+      await TopicModel.updateOne({ tid }, { $inc: { views: 1 } })
 
       const userInfo = await UserService.getUserInfoByUid(topic.uid, [
         'uid',
@@ -80,7 +77,6 @@ class TopicService {
         share: topic.share,
         category: topic.category,
         section: topic.section,
-        popularity: topic.popularity,
         upvote_time: topic.upvote_time
       }
 
@@ -191,7 +187,7 @@ class TopicService {
   }
 
   async getNewTopicToday() {
-    const topics = await TopicModel.find({}, 'tid title time popularity')
+    const topics = await TopicModel.find({}, 'tid title time')
       .populate('user', 'uid avatar name')
       .sort({ time: -1 })
       .limit(7)
