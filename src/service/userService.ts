@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import UserModel from '@/models/user'
 import TopicModel from '@/models/topic'
+import MessageModel from '@/models/message'
 import TopicService from './topicService'
 import ReplyService from './replyService'
 import CommentService from './commentService'
@@ -122,6 +123,7 @@ class UserService {
       await CommentService.deleteCommentsByCid(cid)
     }
 
+    await MessageModel.deleteMany({ sender_uid: uid })
     await UserModel.deleteOne({ uid })
   }
 
