@@ -18,6 +18,7 @@ export interface Galgame {
   likes: number[]
   favorites: number[]
 
+  series: number[]
   resources: number[]
   links: number[]
   histories: number[]
@@ -26,6 +27,7 @@ export interface Galgame {
   alias: string[]
   official: string[]
   engine: string[]
+  tags: string[]
 
   user: UserAttributes[]
 

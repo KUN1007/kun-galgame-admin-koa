@@ -2,9 +2,11 @@ import bcrypt from 'bcrypt'
 import UserModel from '@/models/user'
 import TopicModel from '@/models/topic'
 import MessageModel from '@/models/message'
+import GalgameModel from '@/models/galgame'
 import GalgameCommentModel from '@/models/galgameComment'
 import TopicService from './topicService'
 import ReplyService from './replyService'
+import GalgameService from './galgameService'
 import CommentService from './commentService'
 import ReplyModel from '@/models/reply'
 import CommentModel from '@/models/comment'
@@ -15,6 +17,7 @@ import {
   ADMIN_DELETE_IP_CACHE_KEY
 } from '@/config/admin'
 import type { LoginResponseData } from './types/userService'
+import GalgameResourceModel from '@/models/galgameResource'
 
 class UserService {
   async getUserByUid(uid: number, roles: number) {
@@ -128,6 +131,63 @@ class UserService {
       await CommentService.deleteCommentsByCid(cid)
     }
 
+    for (const gid of user.galgame) {
+      await GalgameService.deleteGalgame(gid)
+    }
+
+    for (const likeTopic of user.like_topic) {
+      await TopicModel.updateOne({ tid: likeTopic }, { $pull: { likes: uid } })
+    }
+
+    for (const dislikeTopic of user.dislike_topic) {
+      await TopicModel.updateOne(
+        { tid: dislikeTopic },
+        { $pull: { dislikes: uid } }
+      )
+    }
+
+    for (const upvoteTopic of user.upvote_topic) {
+      await TopicModel.updateOne(
+        { tid: upvoteTopic },
+        { $pull: { upvotes: uid } }
+      )
+    }
+
+    for (const favoriteTopic of user.favorite_topic) {
+      await TopicModel.updateOne(
+        { tid: favoriteTopic },
+        { $pull: { favorites: uid } }
+      )
+    }
+
+    for (const likeGalgame of user.like_galgame) {
+      await GalgameModel.updateOne(
+        { gid: likeGalgame },
+        { $pull: { likes: uid } }
+      )
+    }
+
+    for (const favoriteGalgame of user.favorite_galgame) {
+      await GalgameModel.updateOne(
+        { gid: favoriteGalgame },
+        { $pull: { favorites: uid } }
+      )
+    }
+
+    for (const contributeGalgame of user.contribute_galgame) {
+      await GalgameModel.updateOne(
+        { gid: contributeGalgame },
+        { $pull: { contributor: uid } }
+      )
+    }
+
+    for (const likeResource of user.like_galgame_resource) {
+      await GalgameResourceModel.updateOne(
+        { grid: likeResource },
+        { $pull: { likes: uid } }
+      )
+    }
+
     await GalgameCommentModel.deleteMany({ c_uid: uid })
     await GalgameCommentModel.updateMany({ to_uid: uid }, { to_uid: 0 })
 
@@ -137,12 +197,12 @@ class UserService {
     await setValue(
       `${ADMIN_DELETE_EMAIL_CACHE_KEY}:${user.email}`,
       user.email,
-      60 * 24 * 60 * 60
+      10 * 365 * 24 * 60 * 60
     )
     await setValue(
       `${ADMIN_DELETE_IP_CACHE_KEY}:${user.ip}`,
       user.ip,
-      60 * 24 * 60 * 60
+      10 * 365 * 24 * 60 * 60
     )
 
     await UserModel.deleteOne({ uid })

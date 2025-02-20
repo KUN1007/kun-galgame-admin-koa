@@ -1,8 +1,11 @@
-import mongoose from '@/db/connection'
 import UserModel from '@/models/user'
+import MessageModel from '@/models/message'
 import GalgameModel from '@/models/galgame'
 import GalgameResourceModel from '@/models/galgameResource'
 import GalgameCommentModel from '@/models/galgameComment'
+import GalgamePRModel from '@/models/galgamePr'
+import GalgameLinkModel from '@/models/galgameLink'
+import GalgameHistoryModel from '@/models/galgameHistory'
 
 class GalgameService {
   async getGalgameResources(gid: number) {
@@ -71,40 +74,31 @@ class GalgameService {
       return
     }
 
-    const session = await mongoose.startSession()
-    session.startTransaction()
-    try {
-      await UserModel.updateOne(
-        { uid: resource.uid },
-        {
-          $inc: {
-            moemoepoint: -(resource.likes.length + 5),
-            like: -resource.likes.length
-          }
+    await UserModel.updateOne(
+      { uid: resource.uid },
+      {
+        $inc: {
+          moemoepoint: -(resource.likes.length + 5),
+          like: -resource.likes.length
         }
-      )
-
-      for (const likedUser of resource.likes) {
-        await UserModel.updateOne(
-          { uid: likedUser },
-          { $pull: { like_galgame_resource: grid } }
-        )
       }
+    )
 
-      await GalgameModel.updateOne(
-        { gid: resource.gid },
-        { $pull: { resources: resource.grid } }
+    for (const likedUser of resource.likes) {
+      await UserModel.updateOne(
+        { uid: likedUser },
+        { $pull: { like_galgame_resource: grid } }
       )
-
-      await GalgameResourceModel.deleteOne({ grid })
-
-      return resource
-    } catch (error) {
-      await session.abortTransaction()
-      throw error
-    } finally {
-      await session.endSession()
     }
+
+    await GalgameModel.updateOne(
+      { gid: resource.gid },
+      { $pull: { resources: resource.grid } }
+    )
+
+    await GalgameResourceModel.deleteOne({ grid })
+
+    return resource
   }
 
   async deleteGalgameComment(gcid: number) {
@@ -113,35 +107,72 @@ class GalgameService {
       return
     }
 
-    const session = await mongoose.startSession()
-    session.startTransaction()
-    try {
-      if (comment.to_uid && comment.c_uid !== comment.to_uid) {
-        await UserModel.updateOne(
-          { uid: comment.to_uid },
-          { $inc: { moemoepoint: -1 } }
-        )
-      }
-
+    if (comment.to_uid && comment.c_uid !== comment.to_uid) {
       await UserModel.updateOne(
-        { uid: comment.c_uid },
-        {
-          $inc: {
-            moemoepoint: -comment.likes.length,
-            like: -comment.likes.length
-          }
-        }
+        { uid: comment.to_uid },
+        { $inc: { moemoepoint: -1 } }
       )
-
-      await GalgameCommentModel.deleteOne({ gcid })
-
-      return comment
-    } catch (error) {
-      await session.abortTransaction()
-      throw error
-    } finally {
-      await session.endSession()
     }
+
+    await UserModel.updateOne(
+      { uid: comment.c_uid },
+      {
+        $inc: {
+          moemoepoint: -comment.likes.length,
+          like: -comment.likes.length
+        }
+      }
+    )
+
+    await GalgameCommentModel.deleteOne({ gcid })
+
+    return comment
+  }
+
+  async deleteGalgame(gid: number) {
+    const galgame = await GalgameModel.findOne({ gid })
+    if (!galgame) {
+      return
+    }
+
+    for (const contributor of galgame.contributor) {
+      await UserModel.updateOne(
+        { uid: contributor },
+        { $pull: { contribute_galgame: gid } }
+      )
+    }
+
+    for (const likedUser of galgame.likes) {
+      await UserModel.updateOne(
+        { uid: likedUser },
+        { $pull: { like_galgame: gid } }
+      )
+    }
+
+    for (const favoriteUser of galgame.favorites) {
+      await UserModel.updateOne(
+        { uid: favoriteUser },
+        { $pull: { favorite_galgame: gid } }
+      )
+    }
+
+    for (const ser of galgame.series) {
+      await GalgameModel.updateOne({ gid: ser }, { $pull: { series: gid } })
+    }
+
+    for (const res of galgame.resources) {
+      await this.deleteGalgameResource(res)
+    }
+
+    for (const com of galgame.comments) {
+      await this.deleteGalgameComment(com)
+    }
+
+    await GalgameLinkModel.deleteMany({ gid })
+    await GalgameLinkModel.deleteMany({ gid })
+    await GalgameHistoryModel.deleteMany({ gid })
+    await GalgamePRModel.deleteMany({ gid })
+    await MessageModel.deleteMany({ gid })
   }
 }
 

@@ -6,7 +6,7 @@ const GalgameSchema = new mongoose.Schema<Galgame>(
   {
     gid: { type: Number, unique: true },
     vndb_id: { type: String, required: true },
-    uid: { type: Number, required: true, ref: 'user' },
+    uid: { type: Number, required: true },
     name: {
       'en-us': { type: String, default: '', maxlength: 100007 },
       'ja-jp': { type: String, default: '', maxlength: 100007 },
@@ -31,6 +31,7 @@ const GalgameSchema = new mongoose.Schema<Galgame>(
     likes: { type: [Number], default: [] },
     favorites: { type: [Number], default: [] },
 
+    series: { type: [Number], default: [] },
     resources: { type: [Number], default: [] },
     links: { type: [Number], default: [] },
     histories: { type: [Number], default: [] },
@@ -38,7 +39,8 @@ const GalgameSchema = new mongoose.Schema<Galgame>(
 
     alias: { type: [String], default: [] },
     official: { type: [String], default: [] },
-    engine: { type: [String], default: [] }
+    engine: { type: [String], default: [] },
+    tags: { type: [String], default: [] }
   },
   { timestamps: { createdAt: 'created', updatedAt: 'updated' } }
 )
