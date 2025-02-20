@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import UserModel from '@/models/user'
 import TopicModel from '@/models/topic'
 import MessageModel from '@/models/message'
+import GalgameCommentModel from '@/models/galgameComment'
 import TopicService from './topicService'
 import ReplyService from './replyService'
 import CommentService from './commentService'
@@ -123,7 +124,12 @@ class UserService {
       await CommentService.deleteCommentsByCid(cid)
     }
 
+    await GalgameCommentModel.deleteMany({ c_uid: uid })
+    await GalgameCommentModel.updateMany({ to_uid: uid }, { to_uid: 0 })
+
     await MessageModel.deleteMany({ sender_uid: uid })
+    await MessageModel.deleteMany({ receiver_uid: uid })
+
     await UserModel.deleteOne({ uid })
   }
 
