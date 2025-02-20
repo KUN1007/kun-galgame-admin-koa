@@ -8,8 +8,12 @@ import ReplyService from './replyService'
 import CommentService from './commentService'
 import ReplyModel from '@/models/reply'
 import CommentModel from '@/models/comment'
-
 import { generateLoginToken } from '@/utils/jwt'
+import { setValue } from '@/config/redisConfig'
+import {
+  ADMIN_DELETE_EMAIL_CACHE_KEY,
+  ADMIN_DELETE_IP_CACHE_KEY
+} from '@/config/admin'
 import type { LoginResponseData } from './types/userService'
 
 class UserService {
@@ -129,6 +133,17 @@ class UserService {
 
     await MessageModel.deleteMany({ sender_uid: uid })
     await MessageModel.deleteMany({ receiver_uid: uid })
+
+    await setValue(
+      `${ADMIN_DELETE_EMAIL_CACHE_KEY}:${user.email}`,
+      user.email,
+      60 * 24 * 60 * 60
+    )
+    await setValue(
+      `${ADMIN_DELETE_IP_CACHE_KEY}:${user.ip}`,
+      user.ip,
+      60 * 24 * 60 * 60
+    )
 
     await UserModel.deleteOne({ uid })
   }
