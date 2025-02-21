@@ -206,6 +206,8 @@ class UserService {
     )
 
     await UserModel.deleteOne({ uid })
+
+    return user
   }
 
   async getUserTopics(tidArray: number[]) {

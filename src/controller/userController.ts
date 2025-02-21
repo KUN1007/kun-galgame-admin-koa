@@ -111,16 +111,15 @@ class UserController {
     const uid = ctx.params.uid as string
     const user = ctx.state.user
 
-    const deletedUser = await UserService.getUserByUid(parseInt(uid), 1)
+    await delValue(`refreshToken:${uid}`)
+    const deletedUser = await UserService.deleteUserByUid(parseInt(uid))
+
     const userString = JSON.stringify(deletedUser)
     await AdminInfoService.createAdminInfo(
       user.uid,
       'delete',
       `${user.name} deleted ${deletedUser?.name}\nUID: ${uid}\nUser Info: ${userString}`
     )
-
-    await delValue(`refreshToken:${uid}`)
-    await UserService.deleteUserByUid(parseInt(uid))
   }
 
   async getUserByUid(ctx: Context) {
