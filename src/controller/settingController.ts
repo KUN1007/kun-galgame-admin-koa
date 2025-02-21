@@ -1,7 +1,6 @@
 import { type Context } from 'koa'
 import { delValue, getValue, setValue } from '@/config/redisConfig'
 
-const KUN_PATCH_DISABLE_REGISTER_KEY = 'kun:patch:admin:setting:register'
 const KUN_FORUM_DISABLE_REGISTER_KEY = 'admin:setting:register'
 
 class SettingController {
@@ -17,10 +16,8 @@ class SettingController {
   async updateKunSetting(ctx: Context) {
     const { disableRegister } = ctx.request.body
     if (disableRegister) {
-      await setValue(KUN_PATCH_DISABLE_REGISTER_KEY, 'true')
       await setValue(KUN_FORUM_DISABLE_REGISTER_KEY, 'true')
     } else {
-      await delValue(KUN_PATCH_DISABLE_REGISTER_KEY)
       await delValue(KUN_FORUM_DISABLE_REGISTER_KEY)
     }
   }
