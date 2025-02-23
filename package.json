@@ -44,7 +44,7 @@
     "@babel/node": "^7.23.9",
     "@babel/preset-env": "^7.23.9",
     "@types/bcrypt": "^5.0.2",
-    "@types/jsonwebtoken": "^9.0.5",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/koa": "^2.14.0",
     "@types/koa-router": "^7.4.8",
     "@types/koa-session": "^6.4.5",
